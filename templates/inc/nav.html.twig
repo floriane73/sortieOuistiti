@@ -1,9 +1,9 @@
 <nav>
     <ul>
-        <li><a href="{{ path('main_index') }}" title="Home">Accueil</a></li>
+
 
         {% if app.user %}
-
+            <li><a href="{{ path('main_index') }}" title="Home">Accueil</a></li>
             <li><a href="{{ path('user') }}" title="Afficher mon profil">Mon profil</a></li>
             <li><a href="{{ path('app_logout') }}" title="Logout">Se déconnecter ({{ app.user.pseudo }})</a></li>
 
@@ -13,8 +13,8 @@
                 <li><a href="{{ path('lieu') }}" title="Gestion campus">Campus</a></li>
             {% endif %}
 
-        {% else %}
-            <li><a href="{{ path('app_login') }}" title="Login">Login</a></li>
+{#  {% else %}
+            <li><a href="{{ path('app_login') }}" title="Login">Login</a></li>#}
         {% endif %}
 
     </ul>
