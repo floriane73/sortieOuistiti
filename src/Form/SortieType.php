@@ -21,9 +21,15 @@ class SortieType extends AbstractType
     {
         $builder
             ->add('nom', TextType::class)
-            ->add('dateHeureDebut', DateTimeType::class)
+            ->add('dateHeureDebut', DateTimeType::class, [
+                'html5'=>true,
+                'widget'=>'single_text'
+            ])
             ->add('duree', NumberType::class)
-            ->add('dateLimiteInscription', DateType::class)
+            ->add('dateLimiteInscription', DateType::class, [
+                'html5'=>true,
+                'widget'=>'single_text'
+            ])
             ->add('nbInscriptionsMax', NumberType::class)
             ->add('description', TextareaType::class)
             ->add('lieu', EntityType::class, [

@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\EtatSortie;
 use App\Entity\Sortie;
+use App\Form\SortieType;
+use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +17,26 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SortieController extends AbstractController
 {
+
+    /**
+     * @Route ("/details/{id}", name="details")
+     */
+    public function details(
+        $id,
+        SortieRepository $sortieRepository
+    )
+    {
+        $connectedUser= $this->getUser();
+
+        $sortieAffichee = $sortieRepository->getSortieBy($id);
+
+        //dd($sortieAffichee);
+
+        return $this->render('sortie/details.html.twig', [
+            "sortieAffichee"=>$sortieAffichee
+        ]);
+    }
+
     /**
      * @Route("/ajout", name="ajout")
      */
@@ -22,30 +45,32 @@ class SortieController extends AbstractController
         EntityManagerInterface $entityManager
     ): Response
     {
+        $connectedUser = $this->getUser();
+
+        $etatSortie = $entityManager->find(EtatSortie::class, 1);
+
         $sortie = new Sortie();
 
-        $sortie->
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
+        $sortie->setEtatSortie($etatSortie);
+        $sortie->setParticipantOrganisateur($connectedUser);
 
-        $wishForm = $this->createForm(SortieType::class, $sortie);
+        var_dump($sortie);
+        $sortieForm->handleRequest($request);
 
-        $wishForm->handleRequest($request);
-
-        if ($wishForm->isSubmitted() && $wishForm->isValid()) {
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $entityManager->persist($sortie);
             $entityManager->flush();
 
-            $msg = 'Sortie ' . $sortie->getNom() . ' added successfully !';
+            $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
             $this->addFlash('success', $msg);
 
-            return $this->redirectToRoute('wish_details', ['id' => $wish->getId()]);
-
+            return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
         }
 
 
-
-
-        return $this->render('sortie/index.html.twig', [
-            'controller_name' => 'SortieController',
+        return $this->render('sortie/ajout.html.twig', [
+            'sortieForm' => $sortieForm->createView(),
         ]);
     }
 }
