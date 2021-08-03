@@ -1,0 +1,21 @@
+<nav>
+    <ul>
+        <li><a href="{{ path('main_index') }}" title="Home">Accueil</a></li>
+
+        {% if app.user %}
+
+            <li><a href="{{ path('#') }}" title="Afficher mon profil">Mon profil</a></li>
+            <li><a href="{{ path('app_logout') }}" title="Logout">Se déconnecter ({{ app.user.username }})</a></li>
+
+            {% if is_granted("ROLE_ADMIN") %}
+                <li><a href="{{ path('#') }}" title="Créer un nouveau compte">Enregistrer un étudiant</a></li>
+                <li><a href="{{ path('#') }}" title="Gestion villes">Villes</a></li>
+                <li><a href="{{ path('#') }}" title="Gestion campus">Campus</a></li>
+            {% endif %}
+
+        {% else %}
+            <li><a href="{{ path('app_login') }}" title="Login">Login</a></li>
+        {% endif %}
+
+    </ul>
+</nav>
