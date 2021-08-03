@@ -130,7 +130,7 @@ class AppFixtures extends Fixture
     {
         $listeLieux = ["Terrain de foot", "Restaurant", "Patinoire", "Centre commercial", "Palais des sports", "Parking école", "Escalade", "Laser Games", "Brasserie", "Forum", "Salon", "Musée", "Concert"];
         $lieu = $this->manager->getRepository(Lieu::class)->findAll();
-        $participant = $this->manager->getRepository(User::class)->findAll();
+        $participants = $this->manager->getRepository(User::class)->findAll();
         $etats = $this->manager->getRepository(EtatSortie::class)->findAll();
         $campus = $this->manager->getRepository(Campus::class)->findAll();
         $listeDuree = [null,0,10,20,30,60,90,120,180,240,300,330,360];
@@ -153,7 +153,6 @@ class AppFixtures extends Fixture
             }
             $description = (rand(0,9) !=0) ? $this->generator->sentence : null;
 
-
             $sortie = new Sortie();
             $sortie->setNom($listeLieux[rand(0,count($listeLieux)-1)])
                    ->setCampus($this->generator->randomElement($campus))
@@ -163,10 +162,14 @@ class AppFixtures extends Fixture
                    ->setDateLimiteInscription($dateLimiteInscription)
                    ->setEtatSortie($this->generator->randomElement($etats))
                    ->setLieu($this->generator->randomElement($lieu))
-                   ->setParticipantOrganisateur($this->generator->randomElement($participant))
+                   ->setParticipantOrganisateur($this->generator->randomElement($participants))
                    ->setNbInscriptionsMax($nbParticipant);
+                for($i=0; $i<=rand(0,$nbParticipant); $i++){
+                    $sortie ->addParticipantsInscrit($this->generator->randomElement($participants));
+            }
 
-            $this->manager->persist($sortie);
+                $this->manager->persist($sortie);
+
         }
         $this->manager->flush();
     }
