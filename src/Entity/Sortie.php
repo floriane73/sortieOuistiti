@@ -67,15 +67,16 @@ class Sortie
     private $campus;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Participant::class, inversedBy="sortiesOrganisees")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sortiesOrganisees")
      * @ORM\JoinColumn(nullable=false)
      */
     private $participantOrganisateur;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Participant::class, mappedBy="sortiesChoisies")
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="sortiesChoisies")
      */
     private $participantsInscrits;
+
 
     public function __construct()
     {
