@@ -5,8 +5,8 @@ namespace App\DataFixtures;
 use App\Entity\Campus;
 use App\Entity\EtatSortie;
 use App\Entity\Lieu;
-use App\Entity\Participant;
 use App\Entity\Sortie;
+use App\Entity\User;
 use App\Entity\Ville;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -110,16 +110,17 @@ class AppFixtures extends Fixture
             $etat = ($i >= $totalParticipantInactif ) ? true : false;
             $numTel = (rand(0,4) !=0) ? "0".rand(1,9).rand(1,9).rand(1,9).rand(1,9).rand(1,9).rand(1,9).rand(1,9).rand(1,9).rand(1,9) : null;
 
-            $participant = new Participant();
+            $participant = new User();
             $participant->setNom($this->generator->lastName)
                         ->setPrenom($this->generator->firstName)
                         ->setPseudo($this->generator->userName)
                         ->setTelephone($numTel)
-                        ->setMail($this->generator->email)
-                        ->setMotPasse($this->generator->password)
+                        ->setEmail($this->generator->email)
+                        ->setPassword($this->generator->password)
                         ->setAdministrateur(false)
                         ->setActif($etat)
-                        ->setCampus($this->generator->randomElement($campus));
+                        ->setCampus($this->generator->randomElement($campus))
+                        ->setRoles(["ROLE_USER"]);
             $this->manager->persist($participant);
         }
         $this->manager->flush();
@@ -129,7 +130,7 @@ class AppFixtures extends Fixture
     {
         $listeLieux = ["Terrain de foot", "Restaurant", "Patinoire", "Centre commercial", "Palais des sports", "Parking école", "Escalade", "Laser Games", "Brasserie", "Forum", "Salon", "Musée", "Concert"];
         $lieu = $this->manager->getRepository(Lieu::class)->findAll();
-        $participant = $this->manager->getRepository(Participant::class)->findAll();
+        $participant = $this->manager->getRepository(User::class)->findAll();
         $etats = $this->manager->getRepository(EtatSortie::class)->findAll();
         $campus = $this->manager->getRepository(Campus::class)->findAll();
         $listeDuree = [null,0,10,20,30,60,90,120,180,240,300,330,360];
