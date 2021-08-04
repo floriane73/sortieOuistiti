@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Form\UserType;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -71,6 +72,18 @@ class   UserController extends AbstractController
         return $this->render('user/modifier.html.twig', [
             'userForm' => $userForm->createView()
         ]);
+    }
+
+    /**
+     * @Route("/afficher/{id}", name="afficher_profil")
+     */
+    public function afficher(int $id, UserRepository $userRepository)
+    {
+        $result = $userRepository->find($id);
+
+     return $this->render("user/afficher.html.twig", [
+        'profil' => $result
+     ]);
     }
 
 }
