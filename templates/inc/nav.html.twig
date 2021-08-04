@@ -5,7 +5,7 @@
         {% if app.user %}
 
             <li><a href="{{ path('user_user') }}" title="Afficher mon profil">Mon profil</a></li>
-            <li><a href="{{ path('app_logout') }}" title="Logout">Se déconnecter ({{ app.user.username }})</a></li>
+            <li><a href="{{ path('app_logout') }}" title="Logout">Se déconnecter ({{ app.user.pseudo }})</a></li>
 
             {% if is_granted("ROLE_ADMIN") %}
                 <li><a href="{{ path('app_register') }}" title="Créer un nouveau compte">Enregistrer un étudiant</a></li>
