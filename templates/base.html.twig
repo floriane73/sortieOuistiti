@@ -14,26 +14,27 @@
 </head>
 
 <body>
-<header>
 
-</header>
-<main>
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="flash flash-{{ label }}">
-                {{ message }}
-            </div>
+    <header>
+        {% include('inc/nav.html.twig') %}
+    </header>
+    <main>
+        {% for label, messages in app.flashes %}
+            {% for message in messages %}
+                <div class="flash flash-{{ label }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
         {% endfor %}
-    {% endfor %}
 
-    {% block body %}
-        Bienvenue sur la page par défaut.
-    {% endblock %}
-</main>
+        {% block body %}
+            Bienvenue sur la page par défaut.
+        {% endblock %}
+    </main>
+    <footer>
 
-<footer>
+    </footer>
 
-</footer>
 </body>
 
 </html>

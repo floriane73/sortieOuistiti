@@ -55,7 +55,7 @@ class SortieController extends AbstractController
         $sortie->setEtatSortie($etatSortie);
         $sortie->setParticipantOrganisateur($connectedUser);
 
-        var_dump($sortie);
+        dump($sortie);
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
