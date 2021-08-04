@@ -3,14 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
-use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
+use Symfony\Component\Serializer\SerializerInterface;
 
 /**
  * @Route("/home", name="main_")
@@ -34,7 +33,7 @@ class MainController extends AbstractController
             $listeSorties,
             $request->query->getInt('page', 1),
             10
-);
+        );
         return $this->render('main/index.html.twig', [
             'listeSorties'=>$sortiesPaginees
         ]);
@@ -48,7 +47,8 @@ class MainController extends AbstractController
         SerializerInterface $serializer
     ) {
         $sortie = $sortieRepository->getSortieBy(1);
-        $data = $serializer->serialize($sortie, 'json');
+        dd($sortie);
+        $data = $serializer->serialize($sortie, 'json', ['groups'=>'sortie', 'user', 'etatSortie', 'campus', 'lieu', 'ville']);
 
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');
