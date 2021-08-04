@@ -4,7 +4,8 @@
 
         {% if app.user %}
             <li><a href="{{ path('main_index') }}" title="Home">Accueil</a></li>
-            <li><a href="{{ path('user') }}" title="Afficher mon profil">Mon profil</a></li>
+            <li><a href="{{ path('user')}}" title="Afficher mon profil">Mon profil</a></li>
+            {#  <li><a href="{{ path('user',{'id':user.id })}}" title="Afficher mon profil">Mon profil</a></li>#}
             <li><a href="{{ path('app_logout') }}" title="Logout">Se déconnecter ({{ app.user.pseudo }})</a></li>
 
             {% if is_granted("ROLE_ADMIN") %}
