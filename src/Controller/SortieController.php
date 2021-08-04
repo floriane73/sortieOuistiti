@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use App\Entity\Campus;
 use App\Entity\EtatSortie;
 use App\Entity\Sortie;
+use App\Entity\User;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -48,12 +50,14 @@ class SortieController extends AbstractController
         $connectedUser = $this->getUser();
 
         $etatSortie = $entityManager->find(EtatSortie::class, 1);
+        $campusUser = $connectedUser->getCampus();
 
         $sortie = new Sortie();
 
         $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortie->setEtatSortie($etatSortie);
         $sortie->setParticipantOrganisateur($connectedUser);
+        $sortie->setCampus($campusUser);
 
         dump($sortie);
         $sortieForm->handleRequest($request);
@@ -71,6 +75,7 @@ class SortieController extends AbstractController
 
         return $this->render('sortie/ajout.html.twig', [
             'sortieForm' => $sortieForm->createView(),
+            'sortie' => $sortie
         ]);
     }
 }
