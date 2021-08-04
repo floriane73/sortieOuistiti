@@ -38,10 +38,22 @@
             <td>{{ sortie.etatSortie.libelle }}</td>
             <td></td>
             <td>{{ sortie.participantOrganisateur.nom }}</td>
-            <td>Consulter(lien à créer)</td>
+
+            <td>
+                {% if sortie.participantOrganisateur.nom is same as(app.user.nom) %}
+                    <a href="{{ path('sortie_modifier', {'id': sortie.id}) }}">Modifier</a>
+                {% else %}
+                    <a href="{{ path('sortie_details', {'id': sortie.id}) }}">Afficher</a>
+                {% endif %}
+            </td>
         </tr>
     {% endfor %}
     </table>
-    {{ knp_pagination_render(listeSorties) }}
+    <div id="pagination">
+        {{ knp_pagination_render(listeSorties) }}
+    </div>
+    <div >
+        <a href="{{ path('sortie_ajout') }}" class="ajoutSortie">Créer une sortie</a>
+    </div>
 </div>
 {% endblock %}

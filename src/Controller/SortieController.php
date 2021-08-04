@@ -73,4 +73,24 @@ class SortieController extends AbstractController
             'sortieForm' => $sortieForm->createView(),
         ]);
     }
+
+    /**
+     * @Route ("/modifier/{id}", name="modifier")
+     */
+    //todo: mettre en place le formulaire de modification
+    public function modifier(
+        $id,
+        SortieRepository $sortieRepository
+    )
+    {
+        $connectedUser= $this->getUser();
+
+        $sortieAffichee = $sortieRepository->getSortieBy($id);
+
+        //dd($sortieAffichee);
+
+        return $this->render('sortie/details.html.twig', [
+            "sortieAffichee"=>$sortieAffichee
+        ]);
+    }
 }

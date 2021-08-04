@@ -3,7 +3,7 @@
 }
 
 body {
-    background: linear-gradient(#ffffff, rgba(248, 151, 106, 0.76));
+    background: linear-gradient(#ffffff, rgb(203, 129, 96));
     background-attachment: fixed;
     display: flex;
     flex-direction: column;
@@ -54,4 +54,16 @@ th, td{
 }
 th{
     text-align: left;
+}
+#pagination{
+    padding: 2rem;
+
+}
+.ajoutSortie{
+
+    padding: 1rem;
+    border: 1px solid rgba(87, 55, 55, 0.8);
+    background-color: rgba(255, 210, 188, 0.76);
+    border-radius: 10px;
+
 }

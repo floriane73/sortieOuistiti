@@ -28,7 +28,6 @@ class MainController extends AbstractController
     ): Response
     {
         $listeSorties = $sortieRepository->findAll();
-        dump($listeSorties);
 
         $sortiesPaginees = $paginator->paginate(
             $listeSorties,
