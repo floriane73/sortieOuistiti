@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ sortieAffichee.nom }} | {{ parent() }}{% endblock %}
+
+{% block body %}
+<h2>Sortie {{ sortieAffichee.nom }}</h2>
+    <div>Date & heure : {{ sortieAffichee.dateHeureDebut | date('d/m/Y h:m') }}</div>
+    <div>Date limite d'inscription : {{ sortieAffichee.dateLimiteInscription | date('d/m/Y')}}</div>
+    <div>Places : {{ sortieAffichee.nbInscriptionsMax }}</div>
+    <div>Durée : {{ sortieAffichee.duree }} minutes</div>
+    <div>Infos : {{ sortieAffichee.description }}</div>
+    <div>Campus : {{ sortieAffichee.campus.nom }}</div>
+    <div>Lieu : {{ sortieAffichee.lieu.nom }}</div>
+    <div>Rue : {{ sortieAffichee.lieu.ville.nom }}</div>
+    <div>Code postal : {{ sortieAffichee.lieu.ville.codePostal }}</div>
+    <div>Latitude : {{ sortieAffichee.lieu.latitude }}</div>
+    <div>Longitude : {{ sortieAffichee.lieu.longitude }}</div>
+
+{% endblock %}
