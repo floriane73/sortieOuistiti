@@ -190,6 +190,13 @@ class SortieController extends AbstractController
     public function annuler(int $id, EntityManagerInterface $entityManager, Request $request)
     {
         $sortie = $entityManager->getRepository(Sortie::class)->find($id);
+
+       if($sortie->getEtatSortie()->getLibelle()!='Ouverte')
+        {
+        $this->addFlash('error', " Il est impossible de (re)annuler cette sortie!");
+        return $this->redirectToRoute('main_index');
+        }
+
         $sortieAnnuler = new Sortie();
         $sortieForm = $this->createForm(AnnulerSortieType::class, $sortieAnnuler);
 
