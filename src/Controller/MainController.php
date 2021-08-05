@@ -24,16 +24,23 @@ class MainController extends AbstractController
     public function index(
         Request $request,
         SortieRepository $sortieRepository,
-        PaginatorInterface $paginator
+        PaginatorInterface $paginator,
+        SerializerInterface $serializer
     ): Response
     {
-        $listeSorties = $sortieRepository->findAll();
+        $listeSorties = $sortieRepository->getSorties();
 
         $sortiesPaginees = $paginator->paginate(
             $listeSorties,
             $request->query->getInt('page', 1),
             10
-);
+        );
+        if($request->get('ajax')) {
+            $data= $serializer->serialize($listeSorties, 'json');
+            $response = new Response($data);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
+        }
         return $this->render('main/index.html.twig', [
             'listeSorties'=>$sortiesPaginees
         ]);
@@ -46,8 +53,9 @@ class MainController extends AbstractController
         SortieRepository $sortieRepository,
         SerializerInterface $serializer
     ) {
-        $sortie = $sortieRepository->getSortieBy(1);
-        $data = $serializer->serialize($sortie, 'json');
+        $sortie = $sortieRepository->findAll();
+
+        $data= $serializer->serialize($sortie, 'json');
 
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');

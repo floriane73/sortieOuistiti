@@ -6,9 +6,13 @@ use App\Repository\LieuRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=LieuRepository::class)
+ * @ExclusionPolicy ("all")
  */
 class Lieu
 {
@@ -16,37 +20,47 @@ class Lieu
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups ({"lieu", "lieu_attr"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups ({"lieu", "lieu_attr"})
+     * @Expose
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups ({"lieu", "lieu_attr"})
+     * @Expose
      */
     private $numeroEtRue;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups ({"lieu", "lieu_attr"})
      */
     private $latitude;
 
     /**
      * @ORM\Column(type="float", nullable=true)
+     * @Groups ({"lieu", "lieu_attr"})
      */
     private $longitude;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="lieux")
+     * @ORM\ManyToOne(targetEntity=Ville::class, inversedBy="lieux", fetch="LAZY")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups ({"lieu", "lieu_attr"})
      */
     private $ville;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="lieu")
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="lieu", fetch="LAZY")
+     * @Groups ({"lieu", "lieu_child"})
      */
     private $sorties;
 
