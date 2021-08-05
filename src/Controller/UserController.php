@@ -2,19 +2,75 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Form\UserType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-class UserController extends AbstractController
+/**
+ * @Route ("/user", name="user_")
+ */
+
+class   UserController extends AbstractController
 {
     /**
-     * @Route("/user", name="user")
+     * @Route("/", name="user")
      */
     public function index(): Response
     {
         return $this->render('user/index.html.twig', [
             'controller_name' => 'UserController',
+
         ]);
     }
+
+    /**
+     * @Route("/modifier", name="modifier_profil")
+     */
+    public function profil(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder)
+    {
+        //récuperation de l'utilisateur
+        $user = $this->getUser();
+
+        $userForm = $this->createForm(UserType::class,$user);
+        $userForm->handleRequest($request);
+
+        if($userForm->isSubmitted() && $userForm->isValid() ){
+            //Hash du mot de passe
+            $user = new User();
+            $plainPassword = $userForm['password']->getData();
+            $encoded = $encoder->encodePassword($user, $plainPassword);
+
+            //Récupératon de la data
+            $user = $userForm->getData();
+            $user->setPassword($encoded);
+
+            $file = $userForm['avatarPath']->getData();
+            if($file){
+                //renomme aleatoirement l'image
+                $filename = bin2hex(random_bytes(6)).'.'.$file->guessExtension();
+                try {
+                    $file->move($this->getParameter('folderAvatar'), $filename);
+                } catch (FileException $e) {
+                    // unable to upload the photo, give up
+                }
+                $user->setAvatarPath($filename);
+            }
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', "Les modifications ont été correctement effectuées !");
+            return $this->redirectToRoute('user_modifier_profil'); //Modifier la route
+        }
+
+        return $this->render('user/modifier.html.twig', [
+            'userForm' => $userForm->createView()
+        ]);
+    }
+
 }

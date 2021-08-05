@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Profil</h1>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+
+    {{ form_start(userForm) }}
+        {{ form_row(userForm.pseudo, { value: app.user.pseudo}) }}
+
+        {{ form_row(userForm.prenom, { value: app.user.prenom}) }}
+
+        {{ form_row(userForm.nom, { value: app.user.nom}) }}
+
+        {{ form_row(userForm.telephone, { value: app.user.telephone}) }}
+
+        {{ form_row(userForm.email, { value: app.user.email}) }}
+
+        {{ form_row(userForm.password, { value: app.user.password}) }}
+
+        {{ form_row(userForm.campus)}}
+
+        {{ form_row(userForm.avatarPath, { value: app.user.avatarPath}) }}
+
+    <button type="submit">Enregistrer</button>
+    <button type="reset">Annuler</button>
+    {{ form_end(userForm) }}
+
+    <div id="avatarPrevious">
+
+    </div>
+
+
+    {#  <script>
+        document.onload =(function(){
+
+            let elementAvatar = document.getElementById("user_avatarPath");
+            elementAvatar.addEventListener("change", getImage)
+
+            function getImage(){
+                let elementAvatarPrevious = document.getElementById('avatarPrevious');
+                let linkImage = document.getElementById('user_avatarPath').value;
+
+                console.log(linkImage);
+                let image = linkImage.substr(12);
+                  //  console.log(image);
+                   // alert(image)
+                //console.log(image.toString());
+                elementAvatarPrevious.innerHTML="<img src='"+linkImage+"'>";
+            }
+
+        })();
+    </script>#}
+{% endblock %}
+
+{% block javascripts %}
+
+{% endblock %}
+
+
+{% block title %}
+    {{ parent() }} | Profil : {{ app.user.pseudo }}
+{% endblock %}
+

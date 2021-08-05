@@ -9,12 +9,51 @@
 </style>
 
 <div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'E:/wamp/www/sortieOuistiti/src/Controller/MainController.php'|file_link(0) }}">src/Controller/MainController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'E:/wamp/www/sortieOuistiti/templates/main/index.html.twig'|file_link(0) }}">templates/main/index.html.twig</a></code></li>
-    </ul>
+    <h1>Liste des sorties</h1>
+
+    <table>
+        <tr>
+            <th>Nom de la sortie</th>
+            <th>Date de la sortie</th>
+            <th>Clôture</th>
+            <th>Inscrits</th>
+            <th>Etat</th>
+            <th>Inscrit</th>
+            <th>Organisateur</th>
+            <th>actions</th>
+        </tr>
+    {%  for sortie in listeSorties %}
+        <tr>
+            <td>{{ sortie.nom }}</td>
+            <td>{{ sortie.dateHeureDebut|date('d/m/Y h:i') }}</td>
+            <td>{{sortie.dateLimiteInscription|date('d/m/Y')}}</td>
+            <td>
+                {% if sortie.nbInscriptionsMax is not null %}
+                    {{ sortie.participantsInscrits.count }} / {{ sortie.nbInscriptionsMax}}
+                {% else %}
+                    {{ sortie.participantsInscrits.count }}
+            {% endif %}
+            </td>
+            <td>{{ sortie.etatSortie.libelle }}</td>
+            <td></td>
+            <td>{{ sortie.participantOrganisateur.nom }}</td>
+
+            <td>
+                {% if sortie.participantOrganisateur.nom is same as(app.user.nom) %}
+                    <a href="{{ path('sortie_modifier', {'id': sortie.id}) }}">Modifier</a>
+                {% else %}
+                    <a href="{{ path('sortie_details', {'id': sortie.id}) }}">Afficher</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </table>
+    <div id="pagination">
+        {{ knp_pagination_render(listeSorties) }}
+    </div>
+    <div >
+        <a href="{{ path('sortie_ajout') }}" class="ajoutSortie">Créer une sortie</a>
+    </div>
 </div>
 {% endblock %}
