@@ -48,8 +48,9 @@ class MainController extends AbstractController
             $response->headers->set('Content-Type', 'application/json');
             return $response;
         }
-        return $this->render('main/index.html.twig', [
-            'listeSorties'=>$sortiesPaginees
+        return $this->render('main/index.html.twig',[
+            'listeSorties'=>$sortiesPaginees,
+            'filtresForm'=>$filtresForm->createView()
         ]);
     }
 
