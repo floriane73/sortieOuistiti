@@ -4,8 +4,8 @@ namespace App\Controller;
 
 use App\Entity\EtatSortie;
 use App\Entity\Sortie;
+use App\Form\AnnulerSortieType;
 use App\Form\SortieType;
-use App\Repository\EtatSortieRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
