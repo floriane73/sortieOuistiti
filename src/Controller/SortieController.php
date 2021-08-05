@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\EtatSortie;
 use App\Entity\Sortie;
 use App\Form\SortieType;
+use App\Repository\EtatSortieRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -124,7 +125,7 @@ class SortieController extends AbstractController
         $user = $this->getUser();
 
         //Extraction des données pour vérification avant inscription
-        $infosSortie = $entityManager->getRepository(Sortie::class)->getSortieBy($id);
+        $infosSortie = $entityManager->getRepository(Sortie::class)->find($id);
         $NbInscriptionsMax = $infosSortie->getNbInscriptionsMax();
         $nbParticipantInscrit = count($infosSortie->getParticipantsInscrits());
         $etatSortie= $infosSortie->getEtatSortie()->getId();
@@ -190,9 +191,14 @@ class SortieController extends AbstractController
     {
 
         $sortie = $entityManager->getRepository(Sortie::class)->find($id);
+        $etatSortie = $entityManager->find(EtatSortie::class, 4);
 
+        $sortie->setEtatSortie($etatSortie);
 
-        dd($id);
+        $entityManager->persist($sortie);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('main_index');
 
     }
 
