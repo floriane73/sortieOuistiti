@@ -3,7 +3,9 @@
 {% block title %}{{ sortieAffichee.nom }} | {{ parent() }}{% endblock %}
 
 {% block body %}
-<h2>Sortie {{ sortieAffichee.nom }}</h2>
+    <h2>Sortie {{ sortieAffichee.nom }}</h2>
+
+    <div>Etat : {{ sortieAffichee.etatSortie.libelle }}</div>
     <div>Date & heure : {{ sortieAffichee.dateHeureDebut | date('d/m/Y h:m') }}</div>
     <div>Date limite d'inscription : {{ sortieAffichee.dateLimiteInscription | date('d/m/Y')}}</div>
     <div>Places : {{ sortieAffichee.nbInscriptionsMax }}</div>
@@ -15,4 +17,55 @@
     <div>Code postal : {{ sortieAffichee.lieu.ville.codePostal }}</div>
     <div>Latitude : {{ sortieAffichee.lieu.latitude }}</div>
     <div>Longitude : {{ sortieAffichee.lieu.longitude }}</div>
-    {% endblock %}
+
+    Organisateur : id : {{ sortieAffichee.participantOrganisateur.id }} : {{ sortieAffichee.participantOrganisateur.nom }} {{ sortieAffichee.participantOrganisateur.prenom }}
+    <table>
+        <th>Pseudo</th>
+        <th>Nom</th>
+        <th>Email</th>
+        {% for participant in sortieAffichee.participantsInscrits %}
+            <tr>
+                <td>{{ participant.pseudo }}</td>
+                <td>{{ participant.prenom }} {{ participant.nom|upper }}</td>
+                <td>{{ participant.email }} </td>
+            </tr>
+        {% endfor %}
+    </table>
+    remy13@orange.fr
+
+    {% set inscritOK = false %}
+    {% for participant in sortieAffichee.participantsInscrits %}
+
+        {% if participant.id == app.user.id %}
+            {% set inscritOK = true %}
+        {% endif %}
+
+    {% endfor %}
+
+
+    {% if app.user %}
+        {% if app.user.administrateur %}
+            <div>
+                <a href="{{ path('sortie_details_annuler',{"id": sortieAffichee.id}) }}"><button>Annuler la sortie</button></a>
+                <button>Modifier la sorte</button>
+                <a href="{{ path('sortie_details_supprimer', {"id": sortieAffichee.id}) }}"><button>Supprimer la sortie</button></a>
+            </div>
+        {% endif %}
+        {% if app.user.id == sortieAffichee.participantOrganisateur.id %}
+            <div>
+                <button>Annuler la sortie</button>
+            </div>
+        {% endif %}
+        {% if app.user.id != sortieAffichee.participantOrganisateur.id and inscritOK == true %}
+            <div>
+                <a href="{{ path('sortie_details_sedesister', {"id": sortieAffichee.id}) }}"><button>Se désister</button></a>
+            </div>
+        {% endif %}
+        {% if app.user.id != sortieAffichee.participantOrganisateur.id and inscritOK == false and app.user.administrateur == null  %}
+            <div>
+                <a href="{{ path('sortie_details_inscription', {"id": sortieAffichee.id}) }}"><button>S'inscrire</button></a>
+            </div>
+        {% endif %}
+    {% endif %}
+
+{% endblock %}

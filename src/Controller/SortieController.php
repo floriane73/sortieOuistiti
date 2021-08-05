@@ -30,7 +30,7 @@ class SortieController extends AbstractController
 
         $sortieAffichee = $sortieRepository->getSortieBy($id);
 
-        //dd($sortieAffichee);
+        dump($sortieAffichee);
 
         return $this->render('sortie/details.html.twig', [
             "sortieAffichee"=>$sortieAffichee
@@ -55,7 +55,7 @@ class SortieController extends AbstractController
         $sortie->setEtatSortie($etatSortie);
         $sortie->setParticipantOrganisateur($connectedUser);
 
-        dump($sortie);
+        var_dump($sortie);
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
@@ -75,22 +75,104 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route ("/modifier/{id}", name="modifier")
+     * @Route("/details/sedesister/{id}", name="details_sedesister")
      */
-    //todo: mettre en place le formulaire de modification
-    public function modifier(
-        $id,
-        SortieRepository $sortieRepository
-    )
+    public function seDesister(int $id, EntityManagerInterface $entityManager)
     {
-        $connectedUser= $this->getUser();
+        //Récupération de l'utilisateur & sortie
+        $user = $this->getUser();
+        $sortie = $entityManager->getRepository(Sortie::class)->find($id);
 
-        $sortieAffichee = $sortieRepository->getSortieBy($id);
+        $data = $sortie->removeParticipantsInscrit($user);
+        $entityManager->persist($data);
+        $entityManager->flush();
 
-        //dd($sortieAffichee);
-
-        return $this->render('sortie/details.html.twig', [
-            "sortieAffichee"=>$sortieAffichee
-        ]);
+        $this->addFlash('success', "Vous avez bien été désinscrit !");
+        return $this->redirectToRoute('sortie_details', array('id' => $id));
     }
+
+    /**
+     * @Route("/details/inscription/{id}", name="details_inscription")
+     */
+    public function inscription(int $id, EntityManagerInterface $entityManager)
+    {
+        //Récupération de l'utilisateur & sortie
+        $sortie = $entityManager->getRepository(Sortie::class)->find($id);
+        //dd($sortie);
+        $user = $this->getUser();
+
+        //Extraction des données pour vérification avant inscription
+        $infosSortie = $entityManager->getRepository(Sortie::class)->getSortieBy($id);
+        $NbInscriptionsMax = $infosSortie->getNbInscriptionsMax();
+        $nbParticipantInscrit = count($infosSortie->getParticipantsInscrits());
+        $etatSortie= $infosSortie->getEtatSortie()->getId();
+
+        $dateDebutSortie = $infosSortie->getdateHeureDebut();
+        $dateLimiteInscription = $infosSortie->getDateLimiteInscription();
+        //$dateLimiteInscription= $dateLimiteInscription->format('d-m-Y');
+        if($dateLimiteInscription == null){
+            $dateLimiteInscription = $dateDebutSortie;
+        }
+
+        $dateNow=new \DateTime(date("d-m-Y"));
+        $interval = $dateNow->diff($dateLimiteInscription);
+        $interval = $interval->format('%R%a');
+        if($NbInscriptionsMax == null){
+            $NbInscriptionsMax = $nbParticipantInscrit+1;
+        }
+
+
+        if($nbParticipantInscrit < $NbInscriptionsMax && $etatSortie == 1 && $interval > 0){
+            $nbPlaceDispo = $NbInscriptionsMax-$nbParticipantInscrit;
+            //Ajout de l'utilisateur à la sortie
+            $data = $sortie->addParticipantsInscrit($user);
+            $entityManager->persist($data);
+            $entityManager->flush();
+
+            $this->addFlash('success', "Vous participerez à cette sortie !");
+            return $this->redirectToRoute('sortie_details', array('id' => $id));
+        }
+
+        $message="";
+        if($nbParticipantInscrit == $NbInscriptionsMax){
+            $message = " Le nombre de participants est atteint...";
+        }
+        if($etatSortie !=1){
+            $message = " Cette sortie n'est plus ouverte à l'inscription !";
+        }
+        if($interval < 0){
+            $message = " Date d'inscription dépassée !";
+        }
+        $this->addFlash('error', "Désolé , vous ne pouvez pas participer !".$message);
+        return $this->redirectToRoute('sortie_details', array('id' => $id));
+    }
+
+    /**
+     * @Route("/details/supprimer/{id}", name="details_supprimer")
+     */
+    public function supprimer(int $id, EntityManagerInterface $entityManager)
+    {
+        $sortie = $entityManager->getRepository(Sortie::class)->find($id);
+        $entityManager->persist($sortie);
+        $entityManager->remove($sortie);
+        $entityManager->flush();
+
+        $this->addFlash('success', "La sortie a bien été effacé !");
+        return $this->redirectToRoute('main_index');
+    }
+
+    /**
+     * @Route("/details/annuler/{id}", name="details_annuler")
+     */
+    public function annuler(int $id, EntityManagerInterface $entityManager)
+    {
+
+        $sortie = $entityManager->getRepository(Sortie::class)->find($id);
+
+
+        dd($id);
+
+    }
+
+
 }
