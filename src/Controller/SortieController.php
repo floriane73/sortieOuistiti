@@ -187,20 +187,32 @@ class SortieController extends AbstractController
     /**
      * @Route("/details/annuler/{id}", name="details_annuler")
      */
-    public function annuler(int $id, EntityManagerInterface $entityManager)
+    public function annuler(int $id, EntityManagerInterface $entityManager, Request $request)
     {
-
         $sortie = $entityManager->getRepository(Sortie::class)->find($id);
-        $etatSortie = $entityManager->find(EtatSortie::class, 4);
+        $sortieAnnuler = new Sortie();
+        $sortieForm = $this->createForm(AnnulerSortieType::class, $sortieAnnuler);
 
-        $sortie->setEtatSortie($etatSortie);
+        $sortieForm->handleRequest($request);
 
-        $entityManager->persist($sortie);
-        $entityManager->flush();
+        if($sortieForm->isSubmitted() && $sortieForm->isValid()){
+            $etatSortie = $entityManager->find(EtatSortie::class, 4);
+            $sortie->setEtatSortie($etatSortie);
+            $sortie->setDescription($sortieForm["description"]->getData());
 
-        return $this->redirectToRoute('main_index');
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('success', "La sortie a bien été annulée !");
+            return $this->redirectToRoute('main_index');
+        }
+
+        return $this->render('sortie/annuler.html.twig',[
+            "sortieForm"=>$sortieForm->createView(),
+            "sortie"=>$sortie
+        ]);
+
 
     }
-
 
 }
