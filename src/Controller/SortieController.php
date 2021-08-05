@@ -28,9 +28,8 @@ class SortieController extends AbstractController
     {
         $connectedUser= $this->getUser();
 
-        $sortieAffichee = $sortieRepository->getSortieBy($id);
+        $sortieAffichee = $sortieRepository->find($id);
 
-        dump($sortieAffichee);
 
         return $this->render('sortie/details.html.twig', [
             "sortieAffichee"=>$sortieAffichee
@@ -65,7 +64,7 @@ class SortieController extends AbstractController
             $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
             $this->addFlash('success', $msg);
 
-            return $this->redirectToRoute('main_index', ['id' => $sortie->getId()]);
+            return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
         }
 
 
@@ -80,21 +79,20 @@ class SortieController extends AbstractController
      */
     //todo: mettre en place le formulaire de modification
 
-    public function modifier(
-        $id,
-        SortieRepository $sortieRepository
-    )
-    {
-        $connectedUser= $this->getUser();
+        public function modifier(
+            $id,
+            SortieRepository $sortieRepository
+        )
+        {
+            $connectedUser= $this->getUser();
 
-        $sortieAffichee = $sortieRepository->getSortieBy($id);
+            $sortieAffichee = $sortieRepository->find($id);
 
-        //dd($sortieAffichee);
 
-        return $this->render('sortie/details.html.twig', [
-            "sortieAffichee"=>$sortieAffichee
-        ]);
-    }
+            return $this->render('sortie/details.html.twig', [
+                "sortieAffichee"=>$sortieAffichee
+            ]);
+        }
 
 
 

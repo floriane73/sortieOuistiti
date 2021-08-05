@@ -32,6 +32,7 @@ class SortieRepository extends ServiceEntityRepository
         $queryBuilder->where('sortie.id = :id');
         $queryBuilder->setParameter('id', $id);
 
+
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
