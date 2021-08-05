@@ -44,7 +44,7 @@
 
 
     {% if app.user %}
-        {% if app.user.id == sortieAffichee.participantOrganisateur.id %}
+        {% if app.user.id == sortieAffichee.participantOrganisateur.id or app.user.id == app.user.administrateur%}
             <div>
                 <a href="{{ path('sortie_details_annuler',{"id": sortieAffichee.id}) }}"><button>Annuler la sortie</button></a>
             {% if app.user.administrateur %}
