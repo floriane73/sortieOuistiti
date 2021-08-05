@@ -3,7 +3,7 @@
 }
 
 body {
-    background: linear-gradient(#ffffff, rgb(203, 129, 96));
+    background: linear-gradient(#ffffff, rgb(222, 160, 132));
     background-attachment: fixed;
     display: flex;
     flex-direction: column;
@@ -60,10 +60,8 @@ th{
 
 }
 .ajoutSortie{
-
     padding: 1rem;
     border: 1px solid rgba(87, 55, 55, 0.8);
     background-color: rgba(255, 210, 188, 0.76);
     border-radius: 10px;
-
 }

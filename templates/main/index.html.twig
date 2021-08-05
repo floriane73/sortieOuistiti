@@ -40,7 +40,7 @@
             <td>{{ sortie.participantOrganisateur.nom }}</td>
 
             <td>
-                {% if sortie.participantOrganisateur.nom is same as(app.user.nom) %}
+                {% if sortie.participantOrganisateur.id is same as(app.user.id) %}
                     <a href="{{ path('sortie_modifier', {'id': sortie.id}) }}">Modifier</a>
                 {% else %}
                     <a href="{{ path('sortie_details', {'id': sortie.id}) }}">Afficher</a>
