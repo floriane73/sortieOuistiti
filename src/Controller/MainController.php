@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Form\FiltresType;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\SortieRepository;
@@ -26,8 +27,14 @@ class MainController extends AbstractController
         SortieRepository $sortieRepository,
         PaginatorInterface $paginator,
         SerializerInterface $serializer
-    ): Response
+        ): Response
     {
+
+        $sortie = new Sortie();
+        $filtresForm = $this->createForm(FiltresType::class,  $sortie);
+
+        $filtresForm->handleRequest($request);
+
         $listeSorties = $sortieRepository->getSorties();
 
         $sortiesPaginees = $paginator->paginate(
