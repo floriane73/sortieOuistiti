@@ -44,17 +44,14 @@
 
 
     {% if app.user %}
-        {% if app.user.administrateur %}
-            <div>
-                <a href="{{ path('sortie_details_annuler',{"id": sortieAffichee.id}) }}"><button>Annuler la sortie</button></a>
-                <button>Modifier la sorte</button>
-                <a href="{{ path('sortie_details_supprimer', {"id": sortieAffichee.id}) }}"><button>Supprimer la sortie</button></a>
-            </div>
-        {% endif %}
         {% if app.user.id == sortieAffichee.participantOrganisateur.id %}
             <div>
-                <button>Annuler la sortie</button>
-            </div>
+                <a href="{{ path('sortie_details_annuler',{"id": sortieAffichee.id}) }}"><button>Annuler la sortie</button></a>
+            {% if app.user.administrateur %}
+                    <button>Modifier la sorte</button>
+                    <a href="{{ path('sortie_details_supprimer', {"id": sortieAffichee.id}) }}"><button>Supprimer la sortie</button></a>
+                </div>
+            {% endif %}
         {% endif %}
         {% if app.user.id != sortieAffichee.participantOrganisateur.id and inscritOK == true %}
             <div>
