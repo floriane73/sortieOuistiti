@@ -46,7 +46,6 @@ class User implements UserInterface
      * @var string The hashed password
      * @ORM\Column(type="string")
      * @Groups ({"user", "user_attr"})
-     * @Expose
      */
     private $password;
 

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Sortie;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
@@ -24,19 +25,21 @@ class SortieRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('sortie');
         $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp.id = sortie.campus')->addSelect('camp');
         $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga.id = sortie.participantOrganisateur')->addSelect('orga');
+        $queryBuilder->innerJoin('sortie.participantsInscrits', 'inscrits')->addSelect('inscrits');
         $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat.id = sortie.etatSortie')->addSelect('etat');
         $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu.id = sortie.lieu')->addSelect('lieu');
         $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville.id = lieu.ville')->addSelect('ville');
 
         $queryBuilder->addOrderBy('sortie.dateHeureDebut', 'ASC');
 
-        return $queryBuilder->getQuery();
+        return $queryBuilder->getQuery()->getResult();
     }
 
-    public function getSortieBy($id) {
+    public function getSortieById($id) {
         $queryBuilder = $this->createQueryBuilder('sortie');
         $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp.id = sortie.campus')->addSelect('camp');
         $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga.id = sortie.participantOrganisateur')->addSelect('orga');
+        $queryBuilder->innerJoin('sortie.participantsInscrits', 'inscrits')->addSelect('inscrits');
         $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat.id = sortie.etatSortie')->addSelect('etat');
         $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu.id = sortie.lieu')->addSelect('lieu');
         $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville.id = lieu.ville')->addSelect('ville');
@@ -45,6 +48,33 @@ class SortieRepository extends ServiceEntityRepository
         $queryBuilder->setParameter('id', $id);
 
         return $queryBuilder->getQuery()->getSingleResult();
+    }
+
+    public function getSortiesByFilters($keywords = null, $idOrganisateur = null, $idParticipant = null) {
+        $queryBuilder = $this->createQueryBuilder('sortie');
+        $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp = sortie.campus')->addSelect('camp');
+        $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga = sortie.participantOrganisateur')->addSelect('orga');
+        $queryBuilder->innerJoin('sortie.participantsInscrits', 'inscrits')->addSelect('inscrits');
+        $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat = sortie.etatSortie')->addSelect('etat');
+        $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu = sortie.lieu')->addSelect('lieu');
+        $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville = lieu.ville')->addSelect('ville');
+
+        if ($keywords !== null) {
+            $queryBuilder->andWhere('sortie.nom LIKE :words')
+                ->setParameter('words', '%'.$keywords.'%');
+        }
+        if ($idOrganisateur !== null) {
+            $queryBuilder->andWhere('orga.id = :organisateur')
+                ->setParameter('organisateur', $idOrganisateur);
+        }
+        if ($idParticipant !== null) {
+            $queryBuilder->where('inscrits.id = :participant')
+                ->setParameter('participant', $idParticipant);
+
+        }
+
+
+        return $queryBuilder->getQuery()->getResult();
     }
 
 }

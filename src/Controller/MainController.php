@@ -53,7 +53,7 @@ class MainController extends AbstractController
         SortieRepository $sortieRepository,
         SerializerInterface $serializer
     ) {
-        $sortie = $sortieRepository->findAll();
+        $sortie = $sortieRepository->getSortiesByFilters(null, 50, 43);
 
         $data= $serializer->serialize($sortie, 'json');
 
