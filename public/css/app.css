@@ -1,10 +1,24 @@
+*{
+    font-family: 'Arima Madurai', cursive;
+}
 
 body {
-   /* background-color: rgba(231, 156, 124, 0.76); */
-    background: linear-gradient(#e7d4d4, rgba(238, 132, 85, 0.76));
+    background: linear-gradient(#ffffff, rgb(222, 160, 132));
     background-attachment: fixed;
     display: flex;
     flex-direction: column;
+    min-height: 100vh;
+
+}
+header{
+    padding: 15px;
+    background-color: rgba(0, 0, 0, 0.87);
+    color: #DDDDDD;
+    border-radius: 20px;
+}
+main{
+    flex-grow: 1;
+    align-items: center;
 }
 
 a{
@@ -14,34 +28,20 @@ a{
 a:hover {
     color: #d5c2b8;
 }
-
-header{
-    padding: 15px;
-    background-color: rgba(0, 0, 0, 0.87);
-    color: #DDDDDD;
-    border-radius: 20px;
-}
-
-
 input,
 textarea,
 select{
     margin-bottom: 1rem;
-
 }
-
 main{
-
     padding: 20px;
 }
-
 nav ul{
     display: flex;
     list-style: none;
     float: right;
     margin-right: 3rem;
 }
-
 nav li{
     margin-right: 1rem ;
 
@@ -54,4 +54,14 @@ th, td{
 }
 th{
     text-align: left;
+}
+#pagination{
+    padding: 2rem;
+
+}
+.ajoutSortie{
+    padding: 1rem;
+    border: 1px solid rgba(87, 55, 55, 0.8);
+    background-color: rgba(255, 210, 188, 0.76);
+    border-radius: 10px;
 }

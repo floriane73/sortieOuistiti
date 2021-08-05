@@ -47,9 +47,4 @@ class SortieRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getSingleResult();
     }
 
-    public function getSortiesCampus($campus){
-
-
-    }
-
 }
