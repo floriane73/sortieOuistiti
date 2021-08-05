@@ -55,7 +55,7 @@ class SortieController extends AbstractController
         $sortie->setEtatSortie($etatSortie);
         $sortie->setParticipantOrganisateur($connectedUser);
 
-        var_dump($sortie);
+
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
@@ -65,7 +65,7 @@ class SortieController extends AbstractController
             $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
             $this->addFlash('success', $msg);
 
-            return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
+            return $this->redirectToRoute('main_index', ['id' => $sortie->getId()]);
         }
 
 
@@ -73,6 +73,30 @@ class SortieController extends AbstractController
             'sortieForm' => $sortieForm->createView(),
         ]);
     }
+
+
+    /**
+     * @Route ("/modifier/{id}", name="modifier")
+     */
+    //todo: mettre en place le formulaire de modification
+
+    public function modifier(
+        $id,
+        SortieRepository $sortieRepository
+    )
+    {
+        $connectedUser= $this->getUser();
+
+        $sortieAffichee = $sortieRepository->getSortieBy($id);
+
+        //dd($sortieAffichee);
+
+        return $this->render('sortie/details.html.twig', [
+            "sortieAffichee"=>$sortieAffichee
+        ]);
+    }
+
+
 
     /**
      * @Route("/details/sedesister/{id}", name="details_sedesister")
