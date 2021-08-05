@@ -6,10 +6,13 @@ use App\Repository\CampusRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=CampusRepository::class)
+ * @ExclusionPolicy("all")
  */
 class Campus
 {
@@ -17,26 +20,27 @@ class Campus
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups ("campus")
+     * @Groups ({"campus", "campus_attr"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ("campus")
+     * @Groups ({"campus", "campus_attr"})
+     * @Expose
      */
     private $nom;
 
-
     /**
      * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="campus", fetch="LAZY")
-     * @Groups ("campus_details")
+     * @Groups ({"campus", "campus_child"})
      */
     private $sorties;
 
     /**
      * @ORM\OneToMany(targetEntity=User::class, mappedBy="campus", fetch="LAZY")
-     * @Groups ("campus_details")
+     * @Groups ({"campus", "campus_child"})
      */
     private $users;
 

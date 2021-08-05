@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Sortie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr\Join;
 
 /**
  * @method Sortie|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,13 +20,26 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
+    public function getSorties() {
+        $queryBuilder = $this->createQueryBuilder('sortie');
+        $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp.id = sortie.campus')->addSelect('camp');
+        $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga.id = sortie.participantOrganisateur')->addSelect('orga');
+        $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat.id = sortie.etatSortie')->addSelect('etat');
+        $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu.id = sortie.lieu')->addSelect('lieu');
+        $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville.id = lieu.ville')->addSelect('ville');
+
+        $queryBuilder->addOrderBy('sortie.dateHeureDebut', 'ASC');
+
+        return $queryBuilder->getQuery();
+    }
+
     public function getSortieBy($id) {
         $queryBuilder = $this->createQueryBuilder('sortie');
-        $queryBuilder->innerJoin('sortie.campus', 'camp')->addSelect('camp');
-        $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga')->addSelect('orga');
-        $queryBuilder->innerJoin('sortie.etatSortie', 'etat')->addSelect('etat');
-        $queryBuilder->innerJoin('sortie.lieu', 'lieu')->addSelect('lieu');
-        $queryBuilder->innerJoin('lieu.ville', 'ville')->addSelect('ville');
+        $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp.id = sortie.campus')->addSelect('camp');
+        $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga.id = sortie.participantOrganisateur')->addSelect('orga');
+        $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat.id = sortie.etatSortie')->addSelect('etat');
+        $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu.id = sortie.lieu')->addSelect('lieu');
+        $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville.id = lieu.ville')->addSelect('ville');
 
         $queryBuilder->where('sortie.id = :id');
         $queryBuilder->setParameter('id', $id);

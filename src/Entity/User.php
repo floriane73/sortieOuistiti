@@ -6,6 +6,8 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -13,6 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
+ * @ExclusionPolicy ("all")
  */
 class User implements UserInterface
 {
@@ -20,87 +23,98 @@ class User implements UserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $prenom;
 
     /**
      * @ORM\Column(type="string", length=50)
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $avatarPath;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $telephone;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $administrateur;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups ("user")
+     * @Groups ({"user", "user_attr"})
+     * @Expose
      */
     private $actif;
 
     /**
      * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="users", fetch="LAZY")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups ("user_detail")
+     * @Groups ({"user", "user_child"})
      */
     private $campus;
 
     /**
      * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="participantOrganisateur", fetch="LAZY")
-     * @Groups ("user_detail")
+     * @Groups ({"user", "user_child"})
      */
     private $sortiesOrganisees;
 
     /**
      * @ORM\ManyToMany(targetEntity=Sortie::class, inversedBy="participantsInscrits", fetch="LAZY")
-     * @Groups ("user_detail")
+     * @Groups ({"user", "user_child"})
      */
     private $sortiesChoisies;
 

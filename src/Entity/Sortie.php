@@ -6,11 +6,14 @@ use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
+ * @ExclusionPolicy("all")
  */
 class Sortie
 {
@@ -18,76 +21,88 @@ class Sortie
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $nom;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $dateHeureDebut;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $duree;
 
     /**
      * @ORM\Column(type="date", nullable=true)
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $dateLimiteInscription;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $nbInscriptionsMax;
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $lieu;
 
     /**
-     * @ORM\ManyToOne(targetEntity=EtatSortie::class, inversedBy="sorties", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity=EtatSortie::class, inversedBy="sorties", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $etatSortie;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties", fetch="LAZY")
-     * @Groups ("sortie")
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties", fetch="EAGER")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $campus;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sortiesOrganisees", fetch="LAZY")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sortiesOrganisees", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups ("sortie")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $participantOrganisateur;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="sortiesChoisies", fetch="LAZY")
-     * @Groups ("sortie")
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="sortiesChoisies", fetch="EAGER")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $participantsInscrits;
 
