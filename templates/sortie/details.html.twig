@@ -50,8 +50,8 @@
             {% if app.user.administrateur %}
                     <button>Modifier la sorte</button>
                     <a href="{{ path('sortie_details_supprimer', {"id": sortieAffichee.id}) }}"><button>Supprimer la sortie</button></a>
-                </div>
             {% endif %}
+            </div>
         {% endif %}
         {% if app.user.id != sortieAffichee.participantOrganisateur.id and inscritOK == true %}
             <div>
