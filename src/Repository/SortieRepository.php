@@ -26,11 +26,15 @@ class SortieRepository extends ServiceEntityRepository
         $queryBuilder->innerJoin('sortie.etatSortie', 'etat')->addSelect('etat');
         $queryBuilder->innerJoin('sortie.lieu', 'lieu')->addSelect('lieu');
         $queryBuilder->innerJoin('lieu.ville', 'ville')->addSelect('ville');
+        $queryBuilder->innerJoin('sortie.participantsInscrits', 'inscrit')->addSelect('inscrit');
+
 
         $queryBuilder->where('sortie.id = :id');
         $queryBuilder->setParameter('id', $id);
 
         return $queryBuilder->getQuery()->getSingleResult();
     }
+
+
 
 }
