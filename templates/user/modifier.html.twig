@@ -10,6 +10,9 @@
         {% endfor %}
     {% endfor %}
 
+    {% if app.user.avatarPath %}
+        <img src='{{ asset('uploads/avatar/'~ app.user.avatarPath) }}' alt='avatar' width="200">
+    {% endif %}
     {{ form_start(userForm) }}
         {{ form_row(userForm.pseudo, { value: app.user.pseudo}) }}
 
@@ -31,35 +34,33 @@
     <button type="reset">Annuler</button>
     {{ form_end(userForm) }}
 
-    <div id="avatarPrevious">
 
+    <div id="avatarPreview">
     </div>
 
+    <script>
+        window.onload =(function(){
 
-    {#  <script>
-        document.onload =(function(){
-
-            let elementAvatar = document.getElementById("user_avatarPath");
-            elementAvatar.addEventListener("change", getImage)
-
-            function getImage(){
-                let elementAvatarPrevious = document.getElementById('avatarPrevious');
-                let linkImage = document.getElementById('user_avatarPath').value;
-
-                console.log(linkImage);
-                let image = linkImage.substr(12);
-                  //  console.log(image);
-                   // alert(image)
-                //console.log(image.toString());
-                elementAvatarPrevious.innerHTML="<img src='"+linkImage+"'>";
-            }
-
+            let elementAvatarPreview = document.getElementById("avatarPreview");
+            let input = document.getElementById("user_avatarPath");
+            input.addEventListener('change', function(){
+                let [file] = input.files;
+                if(file){
+                    //verification si bien une image
+                    if(file['type'].split('/')[0] == "image"){
+                        elementAvatarPreview.innerHTML = "<img src='"+ URL.createObjectURL(file) +"' alt='avatar' width='200' height=''>";
+                     } else {
+                        this.files[0].name = "fdfsf";
+                        this.form.reset();
+                    }
+                }
+            })
         })();
-    </script>#}
+    </script>
+
 {% endblock %}
 
 {% block javascripts %}
-
 {% endblock %}
 
 

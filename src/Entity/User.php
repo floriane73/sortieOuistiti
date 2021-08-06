@@ -11,6 +11,7 @@ use JMS\Serializer\Annotation\Expose;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -45,7 +46,6 @@ class User implements UserInterface
     /**
      * @var string The hashed password
      * @ORM\Column(type="string")
-     * @Groups ({"user", "user_attr"})
      */
     private $password;
 
@@ -71,6 +71,7 @@ class User implements UserInterface
     private $pseudo;
 
     /**
+     * @Assert\File(mimeTypes="image/*", mimeTypesMessage="Vous ne pouvez télécharger que des images !")
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Groups ({"user", "user_attr"})
      * @Expose
