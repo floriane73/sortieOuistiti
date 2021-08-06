@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Sortie;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\Expr\Join;
 
@@ -23,38 +24,43 @@ class SortieRepository extends ServiceEntityRepository
 
     public function getSorties() {
         $queryBuilder = $this->createQueryBuilder('sortie');
-        $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp.id = sortie.campus')->addSelect('camp');
-        $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga.id = sortie.participantOrganisateur')->addSelect('orga');
-        $queryBuilder->innerJoin('sortie.participantsInscrits', 'inscrits')->addSelect('inscrits');
-        $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat.id = sortie.etatSortie')->addSelect('etat');
-        $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu.id = sortie.lieu')->addSelect('lieu');
-        $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville.id = lieu.ville')->addSelect('ville');
+        $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp = sortie.campus')->addSelect('camp');
+        $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga = sortie.participantOrganisateur')->addSelect('orga');
+        $queryBuilder->leftJoin('sortie.participantsInscrits', 'inscrits')->addSelect('inscrits');
+        $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat = sortie.etatSortie')->addSelect('etat');
+        $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu = sortie.lieu')->addSelect('lieu');
+        $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville = lieu.ville')->addSelect('ville');
 
         $queryBuilder->addOrderBy('sortie.dateHeureDebut', 'ASC');
+
 
         return $queryBuilder->getQuery()->getResult();
     }
 
     public function getSortieById($id) {
         $queryBuilder = $this->createQueryBuilder('sortie');
-        $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp.id = sortie.campus')->addSelect('camp');
-        $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga.id = sortie.participantOrganisateur')->addSelect('orga');
-        $queryBuilder->innerJoin('sortie.participantsInscrits', 'inscrits')->addSelect('inscrits');
-        $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat.id = sortie.etatSortie')->addSelect('etat');
-        $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu.id = sortie.lieu')->addSelect('lieu');
-        $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville.id = lieu.ville')->addSelect('ville');
+        $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp = sortie.campus')->addSelect('camp');
+        $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga = sortie.participantOrganisateur')->addSelect('orga');
+        $queryBuilder->leftJoin('sortie.participantsInscrits', 'inscrits')->addSelect('inscrits');
+        $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat = sortie.etatSortie')->addSelect('etat');
+        $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu = sortie.lieu')->addSelect('lieu');
+        $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville = lieu.ville')->addSelect('ville');
 
         $queryBuilder->where('sortie.id = :id');
         $queryBuilder->setParameter('id', $id);
 
-        return $queryBuilder->getQuery()->getSingleResult();
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
-    public function getSortiesByFilters($keywords = null, $idOrganisateur = null, $idParticipant = null) {
+    public function getSortiesByFilters($keywords = null, $idOrganisateur = null, $idParticipant = null, $idCampus = null) {
+
+        //TODO: recherche dates, passées, auxquelles je ne suis pas inscrit
+
         $queryBuilder = $this->createQueryBuilder('sortie');
         $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp = sortie.campus')->addSelect('camp');
         $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga = sortie.participantOrganisateur')->addSelect('orga');
-        $queryBuilder->innerJoin('sortie.participantsInscrits', 'inscrits')->addSelect('inscrits');
+        $queryBuilder->leftJoin('sortie.participantsInscrits', 'inscrits', Join::WITH, 'inscrits = sortie.participantsInscrits')->addSelect('inscrits');
         $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat = sortie.etatSortie')->addSelect('etat');
         $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu = sortie.lieu')->addSelect('lieu');
         $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville = lieu.ville')->addSelect('ville');
@@ -68,11 +74,14 @@ class SortieRepository extends ServiceEntityRepository
                 ->setParameter('organisateur', $idOrganisateur);
         }
         if ($idParticipant !== null) {
-            $queryBuilder->where('inscrits.id = :participant')
+            $queryBuilder->andWhere('inscrits.id = :participant')
                 ->setParameter('participant', $idParticipant);
 
         }
-
+        if ($idCampus !== null) {
+            $queryBuilder->andWhere('camp.id = :campus')
+                ->setParameter('campus', $idCampus);
+        }
 
         return $queryBuilder->getQuery()->getResult();
     }
