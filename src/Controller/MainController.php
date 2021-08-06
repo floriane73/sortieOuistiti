@@ -2,12 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\Campus;
 use App\Entity\Sortie;
 use App\Form\FiltresType;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\SortieRepository;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,11 +36,52 @@ class MainController extends AbstractController
         SerializerInterface $serializer
         ): Response
     {
+        $defaultData = ['message' => 'Votre recherche '];
+        $form = $this->createFormBuilder($defaultData)
+            ->add('campus', EntityType::class,[
+                'class'=>Campus::class,
+                'choice_label' => 'nom',
+                'required'=>false
+            ] )
+            ->add('nom', TextType::class,[
+                'label' => 'Le nom de la sortie contient',
+                'required'=>false
+            ])
+            ->add('dateDebut', DateType::class,[
+                'required'=>false
+            ])
+            ->add('dateFin', DateType::class,[
+                'required'=>false
+            ])
+            ->add('organisateur', CheckboxType::class,[
+                'label'=> 'Sorties dont je suis l\'organisateur/trice',
+                'required'=>false
+            ])
+            ->add('inscrit', CheckboxType::class,[
+                'label'=> 'Sorties auxquelles je suis inscrit/e',
+                'required'=>false
+            ])
+            ->add('pasInscrit', CheckboxType::class,[
+                'label'=> 'Sorties auxquelles je ne suis pas inscrit/e',
+                'required'=>false
+            ])
+            ->add('passee', CheckboxType::class,[
+                'label'=> 'Sorties passées',
+                'required'=>false
+            ])
+            ->add('submit', SubmitType::class,[
+                'label'=>'Rechercher'
+            ])
+            ->getForm();
 
-        $sortie = new Sortie();
-        $filtresForm = $this->createForm(FiltresType::class,  $sortie);
+        $form->handleRequest($request);
 
-        $filtresForm->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            // data is an array with "name", "email", and "message" keys
+            $data = $form->getData();
+
+        }
+
 
         $listeSorties = $sortieRepository->getSorties();
 
@@ -50,7 +98,7 @@ class MainController extends AbstractController
         }
         return $this->render('main/index.html.twig',[
             'listeSorties'=>$sortiesPaginees,
-            'filtresForm'=>$filtresForm->createView()
+            'filtresForm'=>$form->createView()
         ]);
     }
 
