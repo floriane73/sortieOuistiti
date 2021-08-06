@@ -79,9 +79,7 @@ class MainController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // data is an array with "name", "email", and "message" keys
             $data = $form->getData();
-
         }
-
 
         $listeSorties = $sortieRepository->getSorties();
 
@@ -109,9 +107,9 @@ class MainController extends AbstractController
         SortieRepository $sortieRepository,
         SerializerInterface $serializer
     ) {
-        $sortie = $sortieRepository->getSortiesByFilters(null, null, 36, null);
+        $sorties = $sortieRepository->getSortiesByFilters(null, null, null, null, null, null, null, null, 3);
 
-        $data= $serializer->serialize($sortie, 'json');
+        $data= $serializer->serialize($sorties, 'json');
 
         $response = new Response($data);
         $response->headers->set('Content-Type', 'application/json');

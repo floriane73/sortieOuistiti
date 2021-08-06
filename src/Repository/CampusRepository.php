@@ -19,32 +19,15 @@ class CampusRepository extends ServiceEntityRepository
         parent::__construct($registry, Campus::class);
     }
 
-    // /**
-    //  * @return Campus[] Returns an array of Campus objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('c.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+    const SQL2 = "SELECT DISTINCT user.id, user.name, sortie.name
+    FROM user
+    JOIN sortie as sortie ON user.sortie_id = sortie.id
 
-    /*
-    public function findOneBySomeField($value): ?Campus
-    {
-        return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
+    WHERE sortie.id IN (
+            SELECT sortie2.id FROM sortie sortie2
+            JOIN user user2 ON user2.sortie_id=sortie2.id AND user2.id=5
+    ) AND user.id != 5
+    ORDER BY sortie.date DESC
+    LIMIT 10";
+
 }
