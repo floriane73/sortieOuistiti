@@ -64,7 +64,6 @@ class SortieController extends AbstractController
 
             $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
             $this->addFlash('success', $msg);
-            dump($sortie);
 
             return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
         }
@@ -191,6 +190,13 @@ class SortieController extends AbstractController
     public function annuler(int $id, EntityManagerInterface $entityManager, Request $request)
     {
         $sortie = $entityManager->getRepository(Sortie::class)->getSortieById($id);
+        //Vérification que la sortie est annulable
+        if($sortie->getEtatSortie()->getLibelle()!='Ouverte')
+        {
+            $this->addFlash('error', " Il est impossible de (re)annuler cette sortie!");
+            return $this->redirectToRoute('main_index');
+        }
+
         $sortieAnnuler = new Sortie();
         $sortieForm = $this->createForm(AnnulerSortieType::class, $sortieAnnuler);
 
