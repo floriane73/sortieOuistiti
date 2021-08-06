@@ -97,8 +97,9 @@ class AppFixtures extends Fixture
         $this->manager->flush();
     }
 
-    private function addParticipant(int $number=100)
+    private function addParticipant()
     {
+        $number=100;
         $campus = $this->manager->getRepository(Campus::class)->findAll();
         //0.8 est le pourcentage de participants actif
         $totalParticipantInactif = $number - ceil(($number * 0.8));
@@ -126,25 +127,34 @@ class AppFixtures extends Fixture
         $this->manager->flush();
     }
 
-    private function addSortie(int $number=20)
+    private function addSortie()
     {
+        $number=20;
+
         $listeLieux = ["Terrain de foot", "Restaurant", "Patinoire", "Centre commercial", "Palais des sports", "Parking école", "Escalade", "Laser Games", "Brasserie", "Forum", "Salon", "Musée", "Concert"];
         $lieu = $this->manager->getRepository(Lieu::class)->findAll();
         $participants = $this->manager->getRepository(User::class)->findAll();
-        $etats = $this->manager->getRepository(EtatSortie::class)->findAll();
+
+        //$etats = $this->manager->getRepository(EtatSortie::class)->findAll();
+        $etatOuvert = $this->manager->find(EtatSortie::class,1);
+        $etatEnCours = $this->manager->find(EtatSortie::class,2);
+        $etatFerme = $this->manager->find(EtatSortie::class,3);
+
         $campus = $this->manager->getRepository(Campus::class)->findAll();
-        $listeDuree = [null,0,10,20,30,60,90,120,180,240,300,330,360];
+        $listeDuree = [null,0,10,20,30,60,90,120,180,210,240,270,300,330,360,390,420];
+
+
 
         for($i=0; $i<=$number; $i++){
             //paramètrage
-            $dateHeureDebut = $this->generator->dateTimeBetween('-1 years', '+1 years');
+            $duree = $listeDuree[rand(0, count($listeDuree)-1)];
+            $dateHeureDebut = $this->generator->dateTimeBetween('-6 months', '+1 years');
             $dateDebutSortie = date_format($dateHeureDebut, "y-m-d");
             if(rand(0,4) != 0){
                 //$dateLimiteInscription = date('y-m-d', strtotime($dateDebutSortie. ' - '.rand(2,30).' days'));
                 $dateLimiteInscription = $this->generator->dateTimeBetween(date('y-m-d', strtotime($dateDebutSortie. ' - '.rand(1,10).' days')),$dateDebutSortie);
             } else {
                 $dateLimiteInscription = null;
-                $dateDebutSortie = null;
             }
 
             $nbParticipant = rand(5,50);
@@ -153,20 +163,51 @@ class AppFixtures extends Fixture
             }
             $description = (rand(0,9) !=0) ? $this->generator->sentence : null;
 
+
+            $dateNow=new \DateTime(date("d-m-Y"));
+            if($dateLimiteInscription != null) {
+                $timestampLimiteInscription = $dateLimiteInscription->getTimestamp();
+            } else {
+                $timestampLimiteInscription = $dateHeureDebut->getTimestamp();
+            }
+
+            $timestampDebutSortie = $dateHeureDebut->getTimestamp();
+            if($duree == null){
+                $dateFinSortie = $dateHeureDebut;
+            } else {
+                $dateFinSortie = $dateHeureDebut->add(new \DateInterval('PT'.$duree.'M'));
+            }
+
+            $timestampFinSortie = $dateFinSortie->getTimestamp();
+            //var_dump("Fin sortie :".$timestampFinSortie);
+            $timestampNow = $dateNow->getTimestamp();
+
+            switch ($timestampNow) {
+                case ($timestampNow < $timestampDebutSortie && $timestampNow <= $timestampLimiteInscription) :
+                    $etatSortie = $etatOuvert;
+                    break;
+                case ($timestampNow > $timestampFinSortie) :
+                    $etatSortie = $etatFerme;
+                    break;
+                case ($timestampNow > $timestampDebutSortie && $timestampNow < $timestampFinSortie) :
+                    $etatSortie = $etatEnCours;
+                    break;
+            }
+
             $sortie = new Sortie();
             $sortie->setNom($listeLieux[rand(0,count($listeLieux)-1)])
                    ->setCampus($this->generator->randomElement($campus))
                    ->setDescription($description)
                    ->setDateHeureDebut($dateHeureDebut)
-                   ->setDuree($listeDuree[rand(0, count($listeDuree)-1)])
+                   ->setDuree($duree)
                    ->setDateLimiteInscription($dateLimiteInscription)
-                   ->setEtatSortie($this->generator->randomElement($etats))
+                   ->setEtatSortie($etatSortie)
                    ->setLieu($this->generator->randomElement($lieu))
                    ->setParticipantOrganisateur($this->generator->randomElement($participants))
                    ->setNbInscriptionsMax($nbParticipant);
                 for($i=0; $i<=rand(0,$nbParticipant); $i++){
                     $sortie ->addParticipantsInscrit($this->generator->randomElement($participants));
-            }
+                 }
 
                 $this->manager->persist($sortie);
 
