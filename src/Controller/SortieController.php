@@ -29,7 +29,7 @@ class SortieController extends AbstractController
     {
         $connectedUser= $this->getUser();
 
-        $sortieAffichee = $sortieRepository->find($id);
+        $sortieAffichee = $sortieRepository->getSortieById($id);
 
 
         return $this->render('sortie/details.html.twig', [
@@ -64,6 +64,7 @@ class SortieController extends AbstractController
 
             $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
             $this->addFlash('success', $msg);
+            dump($sortie);
 
             return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
         }
@@ -87,7 +88,7 @@ class SortieController extends AbstractController
         {
             $connectedUser= $this->getUser();
 
-            $sortieAffichee = $sortieRepository->find($id);
+            $sortieAffichee = $sortieRepository->getSortieById($id);
 
 
             return $this->render('sortie/details.html.twig', [
@@ -104,7 +105,7 @@ class SortieController extends AbstractController
     {
         //Récupération de l'utilisateur & sortie
         $user = $this->getUser();
-        $sortie = $entityManager->getRepository(Sortie::class)->find($id);
+        $sortie = $entityManager->getRepository(Sortie::class)->getSortieById($id);
 
         $data = $sortie->removeParticipantsInscrit($user);
         $entityManager->persist($data);
@@ -120,12 +121,12 @@ class SortieController extends AbstractController
     public function inscription(int $id, EntityManagerInterface $entityManager)
     {
         //Récupération de l'utilisateur & sortie
-        $sortie = $entityManager->getRepository(Sortie::class)->find($id);
+        $sortie = $entityManager->getRepository(Sortie::class)->getSortieById($id);
         //dd($sortie);
         $user = $this->getUser();
 
         //Extraction des données pour vérification avant inscription
-        $infosSortie = $entityManager->getRepository(Sortie::class)->find($id);
+        $infosSortie = $entityManager->getRepository(Sortie::class)->getSortieById($id);
         $NbInscriptionsMax = $infosSortie->getNbInscriptionsMax();
         $nbParticipantInscrit = count($infosSortie->getParticipantsInscrits());
         $etatSortie= $infosSortie->getEtatSortie()->getId();
@@ -175,7 +176,7 @@ class SortieController extends AbstractController
      */
     public function supprimer(int $id, EntityManagerInterface $entityManager)
     {
-        $sortie = $entityManager->getRepository(Sortie::class)->find($id);
+        $sortie = $entityManager->getRepository(Sortie::class)->getSortieById($id);
         $entityManager->persist($sortie);
         $entityManager->remove($sortie);
         $entityManager->flush();
@@ -189,7 +190,7 @@ class SortieController extends AbstractController
      */
     public function annuler(int $id, EntityManagerInterface $entityManager, Request $request)
     {
-        $sortie = $entityManager->getRepository(Sortie::class)->find($id);
+        $sortie = $entityManager->getRepository(Sortie::class)->getSortieById($id);
         $sortieAnnuler = new Sortie();
         $sortieForm = $this->createForm(AnnulerSortieType::class, $sortieAnnuler);
 
