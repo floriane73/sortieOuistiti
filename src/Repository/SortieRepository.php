@@ -60,7 +60,7 @@ class SortieRepository extends ServiceEntityRepository
         $queryBuilder = $this->createQueryBuilder('sortie');
         $queryBuilder->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp = sortie.campus')->addSelect('camp');
         $queryBuilder->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga = sortie.participantOrganisateur')->addSelect('orga');
-        $queryBuilder->leftJoin('sortie.participantsInscrits', 'inscrits', Join::WITH, 'inscrits = sortie.participantsInscrits')->addSelect('inscrits');
+        $queryBuilder->leftJoin('sortie.participantsInscrits', 'inscrits')->addSelect('inscrits');
         $queryBuilder->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat = sortie.etatSortie')->addSelect('etat');
         $queryBuilder->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu = sortie.lieu')->addSelect('lieu');
         $queryBuilder->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville = lieu.ville')->addSelect('ville');

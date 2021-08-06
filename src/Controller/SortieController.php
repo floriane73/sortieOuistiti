@@ -27,13 +27,13 @@ class SortieController extends AbstractController
         SortieRepository $sortieRepository
     )
     {
-        $connectedUser= $this->getUser();
+        $connectedUser = $this->getUser();
 
         $sortieAffichee = $sortieRepository->getSortieById($id);
 
 
         return $this->render('sortie/details.html.twig', [
-            "sortieAffichee"=>$sortieAffichee
+            "sortieAffichee" => $sortieAffichee
         ]);
     }
 
@@ -59,13 +59,32 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-            $entityManager->persist($sortie);
-            $entityManager->flush();
 
-            $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
-            $this->addFlash('success', $msg);
+            //vérif date début pas dans le passé
+            $dateNow = new \DateTime();
+            if ($sortie->getDateHeureDebut() <= $dateNow) {
+                $this->addFlash('error', "La sortie ne peut se dérouler dans le passé !");
+                return $this->render('sortie/ajout.html.twig', [
+                    'sortieForm' => $sortieForm->createView(),
+                ]);
+            }
 
-            return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
+            //vérif date début & clôture
+            if ($sortie->getDateHeureDebut() <= $sortie->getDateLimiteInscription()) {
+
+                $this->addFlash('error', "La date de clôture des inscriptions ne peut pas être après le début de la sortie !");
+                return $this->render('sortie/ajout.html.twig', [
+                    'sortieForm' => $sortieForm->createView(),
+                ]);
+
+            } else {
+                $entityManager->persist($sortie);
+                $entityManager->flush();
+
+                $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
+                $this->addFlash('success', $msg);
+                return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
+            }
         }
 
 
@@ -80,21 +99,20 @@ class SortieController extends AbstractController
      */
     //todo: mettre en place le formulaire de modification
 
-        public function modifier(
-            $id,
-            SortieRepository $sortieRepository
-        )
-        {
-            $connectedUser= $this->getUser();
+    public function modifier(
+        $id,
+        SortieRepository $sortieRepository
+    )
+    {
+        $connectedUser = $this->getUser();
 
-            $sortieAffichee = $sortieRepository->getSortieById($id);
+        $sortieAffichee = $sortieRepository->getSortieById($id);
 
 
-            return $this->render('sortie/details.html.twig', [
-                "sortieAffichee"=>$sortieAffichee
-            ]);
-        }
-
+        return $this->render('sortie/details.html.twig', [
+            "sortieAffichee" => $sortieAffichee
+        ]);
+    }
 
 
     /**
@@ -128,25 +146,25 @@ class SortieController extends AbstractController
         $infosSortie = $entityManager->getRepository(Sortie::class)->getSortieById($id);
         $NbInscriptionsMax = $infosSortie->getNbInscriptionsMax();
         $nbParticipantInscrit = count($infosSortie->getParticipantsInscrits());
-        $etatSortie= $infosSortie->getEtatSortie()->getId();
+        $etatSortie = $infosSortie->getEtatSortie()->getId();
 
         $dateDebutSortie = $infosSortie->getdateHeureDebut();
         $dateLimiteInscription = $infosSortie->getDateLimiteInscription();
         //$dateLimiteInscription= $dateLimiteInscription->format('d-m-Y');
-        if($dateLimiteInscription == null){
+        if ($dateLimiteInscription == null) {
             $dateLimiteInscription = $dateDebutSortie;
         }
 
-        $dateNow=new \DateTime(date("d-m-Y"));
+        $dateNow = new \DateTime(date("d-m-Y"));
         $interval = $dateNow->diff($dateLimiteInscription);
         $interval = $interval->format('%R%a');
-        if($NbInscriptionsMax == null){
-            $NbInscriptionsMax = $nbParticipantInscrit+1;
+        if ($NbInscriptionsMax == null) {
+            $NbInscriptionsMax = $nbParticipantInscrit + 1;
         }
 
 
-        if($nbParticipantInscrit < $NbInscriptionsMax && $etatSortie == 1 && $interval > 0){
-            $nbPlaceDispo = $NbInscriptionsMax-$nbParticipantInscrit;
+        if ($nbParticipantInscrit < $NbInscriptionsMax && $etatSortie == 1 && $interval > 0) {
+            $nbPlaceDispo = $NbInscriptionsMax - $nbParticipantInscrit;
             //Ajout de l'utilisateur à la sortie
             $data = $sortie->addParticipantsInscrit($user);
             $entityManager->persist($data);
@@ -156,17 +174,17 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_details', array('id' => $id));
         }
 
-        $message="";
-        if($nbParticipantInscrit == $NbInscriptionsMax){
+        $message = "";
+        if ($nbParticipantInscrit == $NbInscriptionsMax) {
             $message = " Le nombre de participants est atteint...";
         }
-        if($etatSortie !=1){
+        if ($etatSortie != 1) {
             $message = " Cette sortie n'est plus ouverte à l'inscription !";
         }
-        if($interval < 0){
+        if ($interval < 0) {
             $message = " Date d'inscription dépassée !";
         }
-        $this->addFlash('error', "Désolé , vous ne pouvez pas participer !".$message);
+        $this->addFlash('error', "Désolé , vous ne pouvez pas participer !" . $message);
         return $this->redirectToRoute('sortie_details', array('id' => $id));
     }
 
@@ -191,8 +209,7 @@ class SortieController extends AbstractController
     {
         $sortie = $entityManager->getRepository(Sortie::class)->getSortieById($id);
         //Vérification que la sortie est annulable
-        if($sortie->getEtatSortie()->getLibelle()!='Ouverte')
-        {
+        if ($sortie->getEtatSortie()->getLibelle() != 'Ouverte') {
             $this->addFlash('error', " Il est impossible de (re)annuler cette sortie!");
             return $this->redirectToRoute('main_index');
         }
@@ -202,7 +219,7 @@ class SortieController extends AbstractController
 
         $sortieForm->handleRequest($request);
 
-        if($sortieForm->isSubmitted() && $sortieForm->isValid()){
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $etatSortie = $entityManager->find(EtatSortie::class, 4);
             $sortie->setEtatSortie($etatSortie);
             $sortie->setDescription($sortieForm["description"]->getData());
@@ -214,9 +231,9 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('main_index');
         }
 
-        return $this->render('sortie/annuler.html.twig',[
-            "sortieForm"=>$sortieForm->createView(),
-            "sortie"=>$sortie
+        return $this->render('sortie/annuler.html.twig', [
+            "sortieForm" => $sortieForm->createView(),
+            "sortie" => $sortie
         ]);
 
 
