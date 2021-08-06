@@ -6,9 +6,15 @@ use App\Repository\SortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
+ * @ExclusionPolicy("all")
  */
 class Sortie
 {
@@ -16,64 +22,93 @@ class Sortie
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="La sortie doit avoir un nom.")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $nom;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\GreaterThanOrEqual("today", message="La date de la sortie ne peut pas être dans le passé.")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $dateHeureDebut;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Range(min="0", max="1000", notInRangeMessage="La sortie peut durer entre 0 et 1000 minutes.")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $duree;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Assert\LessThanOrEqual(propertyPath="dateHeureDebut", message="La clôture des inscriptions doit précéder le début de la sortie.")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $dateLimiteInscription;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Range(min="0", max="200", notInRangeMessage="Il peut y avoir entre 0 et 200 places.")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $nbInscriptionsMax;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $description;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $lieu;
 
     /**
-     * @ORM\ManyToOne(targetEntity=EtatSortie::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=EtatSortie::class, inversedBy="sorties", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $etatSortie;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties")
+     * @ORM\ManyToOne(targetEntity=Campus::class, inversedBy="sorties", fetch="EAGER")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $campus;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sortiesOrganisees")
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="sortiesOrganisees", fetch="EAGER")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $participantOrganisateur;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="sortiesChoisies")
+     * @ORM\ManyToMany(targetEntity=User::class, mappedBy="sortiesChoisies", fetch="EAGER")
+     * @Groups ({"sortie"})
+     * @Expose
      */
     private $participantsInscrits;
 
