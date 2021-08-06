@@ -52,15 +52,12 @@ class MainController extends AbstractController
             ->add('dateDebut', DateType::class,[
                 'html5'=>true,
                 'required'=>false,
-                'format' => 'ddMMyyyy',
-                'placeholder' => [
-                    'year' => 'Years',
-                    'month' => 'Month',
-                    'day' => 'Day',
-                ]
+                'widget'=>'single_text'
             ])
             ->add('dateFin', DateType::class,[
-                'required'=>false
+                'html5'=>true,
+                'required'=>false,
+                'widget'=>'single_text'
             ])
             ->add('organisateur', CheckboxType::class,[
                 'label'=> 'Sorties dont je suis l\'organisateur/trice',
