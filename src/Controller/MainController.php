@@ -11,6 +11,7 @@ use App\Repository\SortieRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -47,8 +48,16 @@ class MainController extends AbstractController
                 'label' => 'Le nom de la sortie contient',
                 'required'=>false
             ])
+
             ->add('dateDebut', DateType::class,[
-                'required'=>false
+                'html5'=>true,
+                'required'=>false,
+                'format' => 'ddMMyyyy',
+                'placeholder' => [
+                    'year' => 'Years',
+                    'month' => 'Month',
+                    'day' => 'Day',
+                ]
             ])
             ->add('dateFin', DateType::class,[
                 'required'=>false
