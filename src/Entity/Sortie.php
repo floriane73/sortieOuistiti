@@ -10,6 +10,7 @@ use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=SortieRepository::class)
@@ -28,6 +29,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="La sortie doit avoir un nom.")
      * @Groups ({"sortie"})
      * @Expose
      */
@@ -35,6 +37,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="datetime")
+     * @Assert\GreaterThanOrEqual("today", message="La date de la sortie ne peut pas être dans le passé.")
      * @Groups ({"sortie"})
      * @Expose
      */
@@ -42,6 +45,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Range(min="0", max="1000", notInRangeMessage="La sortie peut durer entre 0 et 1000 minutes.")
      * @Groups ({"sortie"})
      * @Expose
      */
@@ -49,6 +53,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Assert\LessThanOrEqual(propertyPath="dateHeureDebut", message="La clôture des inscriptions doit précéder le début de la sortie.")
      * @Groups ({"sortie"})
      * @Expose
      */
@@ -56,6 +61,7 @@ class Sortie
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\Range(min="0", max="200", notInRangeMessage="Il peut y avoir entre 0 et 200 places.")
      * @Groups ({"sortie"})
      * @Expose
      */

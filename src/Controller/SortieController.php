@@ -59,32 +59,12 @@ class SortieController extends AbstractController
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-
-            //vérif date début pas dans le passé
-            $dateNow = new \DateTime();
-            if ($sortie->getDateHeureDebut() <= $dateNow) {
-                $this->addFlash('error', "La sortie ne peut se dérouler dans le passé !");
-                return $this->render('sortie/ajout.html.twig', [
-                    'sortieForm' => $sortieForm->createView(),
-                ]);
-            }
-
-            //vérif date début & clôture
-            if ($sortie->getDateHeureDebut() <= $sortie->getDateLimiteInscription()) {
-
-                $this->addFlash('error', "La date de clôture des inscriptions ne peut pas être après le début de la sortie !");
-                return $this->render('sortie/ajout.html.twig', [
-                    'sortieForm' => $sortieForm->createView(),
-                ]);
-
-            } else {
                 $entityManager->persist($sortie);
                 $entityManager->flush();
 
                 $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
                 $this->addFlash('success', $msg);
                 return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
-            }
         }
 
 
