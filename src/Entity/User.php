@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -54,6 +55,7 @@ class User implements UserInterface
     private $pseudo;
 
     /**
+     * @Assert\File(mimeTypes="image/*", mimeTypesMessage="Vous ne pouvez télécharger que des images !")
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $avatarPath;
