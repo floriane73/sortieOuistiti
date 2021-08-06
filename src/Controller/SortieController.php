@@ -194,16 +194,14 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('main_index');
         }
 
-        $sortieAnnuler = new Sortie();
-        $sortieForm = $this->createForm(AnnulerSortieType::class, $sortieAnnuler);
+
+        $sortieForm = $this->createForm(AnnulerSortieType::class, $sortie);
 
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
             $etatSortie = $entityManager->find(EtatSortie::class, 4);
             $sortie->setEtatSortie($etatSortie);
-            $sortie->setDescription($sortieForm["description"]->getData());
-
             $entityManager->persist($sortie);
             $entityManager->flush();
 
