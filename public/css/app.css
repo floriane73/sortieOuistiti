@@ -28,6 +28,13 @@ a{
 a:hover {
     color: #d5c2b8;
 }
+
+.active {
+    font-weight: bold;
+    color:#d5c2b8;
+    pointer-events: none;
+}
+
 input,
 textarea,
 select{
