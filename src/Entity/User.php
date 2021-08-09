@@ -107,7 +107,8 @@ class User implements UserInterface
     private $campus;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="participantOrganisateur", cascade={"remove"})
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="participantOrganisateur", cascade={"remove"}, fetch="LAZY")
+     * @Groups ({"user", "user_child"})
      */
     private $sortiesOrganisees;
 
