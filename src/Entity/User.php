@@ -82,7 +82,7 @@ class User implements UserInterface
     private $campus;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="participantOrganisateur")
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="participantOrganisateur", cascade={"remove"})
      */
     private $sortiesOrganisees;
 
