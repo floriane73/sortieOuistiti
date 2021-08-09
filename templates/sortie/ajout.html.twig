@@ -12,7 +12,7 @@
     {{ form_row(sortieForm.nbInscriptionsMax) }}
     {{ form_row(sortieForm.description) }}
     {{ form_row(sortieForm.lieu) }}
-    {{ form_row(sortieForm.campus) }}
+    <div>Campus : {{ sortie.campus.nom }}</div>
 
     <button>Valider</button>
     {{ form_end(sortieForm) }}

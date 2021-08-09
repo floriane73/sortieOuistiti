@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <h2>Annuler une sortie</h2>
+
+    <div> {{ sortie.nom }}</div>
+    <div>  {{ sortie.dateHeureDebut|date('d/m/Y') }}</div>
+    <div> {{ sortie.campus.nom }}</div>
+    <div>   {{ sortie.lieu.nom }}</div>
+
+    {{ form_start(sortieForm) }}
+    {{ form_widget(sortieForm) }}
+
+    <button type="submit">Enregistrer</button>
+    <button><a href="{{ path('sortie_details', {'id': sortie.id}) }}"> Annuler</a></button>
+
+
+    {{ form_end(sortieForm) }}
+
+{% endblock %}

@@ -6,9 +6,13 @@ use App\Repository\EtatSortieRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=EtatSortieRepository::class)
+ * @ExclusionPolicy ("all")
  */
 class EtatSortie
 {
@@ -16,16 +20,21 @@ class EtatSortie
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups ({"etatSortie", "etatSortie_attr"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups ({"etatSortie", "etatSortie_attr"})
+     * @Expose
      */
     private $libelle;
 
     /**
-     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="etatSortie")
+     * @ORM\OneToMany(targetEntity=Sortie::class, mappedBy="etatSortie", fetch="LAZY")
+     * @Groups ({"etatSortie", "etatSortie_child"})
      */
     private $sorties;
 
