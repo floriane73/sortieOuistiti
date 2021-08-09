@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Sortie;
 use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
@@ -90,6 +91,21 @@ class   UserController extends AbstractController
      return $this->render("user/afficher.html.twig", [
         'profil' => $result
      ]);
+    }
+
+    /**
+     * @Route("/supprimer/{id}", name="supprimer_profil")
+     */
+    public function supprimer(int $id, EntityManagerInterface $entityManager)
+    {
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $this->addFlash();
+        return $this->redirectToRoute('main_index');
+
     }
 
 }
