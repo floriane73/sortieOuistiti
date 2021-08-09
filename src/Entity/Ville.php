@@ -6,9 +6,13 @@ use App\Repository\VilleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Expose;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=VilleRepository::class)
+ * @ExclusionPolicy ("all")
  */
 class Ville
 {
@@ -16,21 +20,28 @@ class Ville
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups ({"ville", "ville_attr"})
+     * @Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups ({"ville", "ville_attr"})
+     * @Expose
      */
     private $nom;
 
     /**
      * @ORM\Column(type="string", length=5)
+     * @Groups ({"ville", "ville_attr"})
+     * @Expose
      */
     private $codePostal;
 
     /**
-     * @ORM\OneToMany(targetEntity=Lieu::class, mappedBy="ville")
+     * @ORM\OneToMany(targetEntity=Lieu::class, mappedBy="ville", fetch="LAZY")
+     * @Groups ({"ville", "ville_child"})
      */
     private $lieux;
 

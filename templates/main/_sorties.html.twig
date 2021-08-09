@@ -1,0 +1,26 @@
+
+    {% for sortie in listeSorties %}
+        <tr>
+            <td>{{ sortie.nom }}</td>
+            <td>{{ sortie.dateHeureDebut|format_datetime(pattern='d MMM Y à h:m', locale='fr') }}</td>
+            <td>{{ sortie.dateLimiteInscription|date('d/m/Y', 'Europe/Paris') }}</td>
+            <td>
+                {% if sortie.nbInscriptionsMax is not null %}
+                    {{ sortie.participantsInscrits.count }} / {{ sortie.nbInscriptionsMax }}
+                {% else %}
+                    {{ sortie.participantsInscrits.count }}
+                {% endif %}
+            </td>
+            <td>{{ sortie.etatSortie.libelle }}</td>
+            <td></td>
+            <td>{{ sortie.participantOrganisateur.nom }}</td>
+
+            <td>
+                {% if sortie.participantOrganisateur.id is same as(app.user.id) %}
+                    <a href="{{ path('sortie_modifier', {'id': sortie.id}) }}">Modifier</a>
+                {% else %}
+                    <a href="{{ path('sortie_details', {'id': sortie.id}) }}">Afficher</a>
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
