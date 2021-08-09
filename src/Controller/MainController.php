@@ -2,20 +2,14 @@
 
 namespace App\Controller;
 
+use App\Data\FiltresData;
 use App\Entity\Campus;
 use App\Entity\Sortie;
 use App\Form\FiltresType;
 use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\SortieRepository;
-use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
-use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\SubmitButton;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -37,48 +31,10 @@ class MainController extends AbstractController
         SerializerInterface $serializer
         ): Response
     {
-        $defaultData = ['message' => 'Votre recherche '];
-        $form = $this->createFormBuilder($defaultData)
-            ->add('campus', EntityType::class,[
-                'class'=>Campus::class,
-                'choice_label' => 'nom',
-                'required'=>false
-            ] )
-            ->add('nom', TextType::class,[
-                'label' => 'Le nom de la sortie contient',
-                'required'=>false
-            ])
-
-            ->add('dateDebut', DateType::class,[
-                'html5'=>true,
-                'required'=>false,
-                'widget'=>'single_text'
-            ])
-            ->add('dateFin', DateType::class,[
-                'html5'=>true,
-                'required'=>false,
-                'widget'=>'single_text'
-            ])
-            ->add('organisateur', CheckboxType::class,[
-                'label'=> 'Sorties dont je suis l\'organisateur/trice',
-                'required'=>false
-            ])
-            ->add('inscrit', CheckboxType::class,[
-                'label'=> 'Sorties auxquelles je suis inscrit/e',
-                'required'=>false
-            ])
-            ->add('pasInscrit', CheckboxType::class,[
-                'label'=> 'Sorties auxquelles je ne suis pas inscrit/e',
-                'required'=>false
-            ])
-            ->add('passee', CheckboxType::class,[
-                'label'=> 'Sorties passées',
-                'required'=>false
-            ])
-            ->add('submit', SubmitType::class,[
-                'label'=>'Rechercher'
-            ])
-            ->getForm();
+        $userId = $this->getUser()->getId();
+        $filtres = new FiltresData();
+        $filtres->page = $request->get('page', 1);
+        $form = $this->createForm(FiltresType::class, $filtres);
 
         $form->handleRequest($request);
 
@@ -87,22 +43,20 @@ class MainController extends AbstractController
             $data = $form->getData();
         }
 
-        $listeSorties = $sortieRepository->getSorties();
+        $listeSorties = $sortieRepository->getSortiesByFilters($filtres, $userId);
 
-        $sortiesPaginees = $paginator->paginate(
-            $listeSorties,
-            $request->query->getInt('page', 1),
-            10
-        );
-        if($request->get('ajax')) {
+        /*if($request->get('ajax')) {
             $data= $serializer->serialize($listeSorties, 'json');
             $response = new Response($data);
             $response->headers->set('Content-Type', 'application/json');
             return $response;
-        }
+        }*/
+
+        dump($listeSorties);
+
         return $this->render('main/index.html.twig',[
-            'listeSorties'=>$sortiesPaginees,
-            'filtresForm'=>$form->createView()
+            'listeSorties'=>$listeSorties,
+            'formFiltres'=>$form->createView()
         ]);
     }
 
@@ -113,7 +67,9 @@ class MainController extends AbstractController
         SortieRepository $sortieRepository,
         SerializerInterface $serializer
     ) {
-        $sorties = $sortieRepository->getSortiesByFilters(null, null, null, null, null, null, null, null, 3);
+        $sorties = $sortieRepository->getSortiesByFilters(null);
+
+        $sorties = $sorties->getIterator();
 
         $data= $serializer->serialize($sorties, 'json');
 
