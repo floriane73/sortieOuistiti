@@ -13,28 +13,29 @@
     <link href="https://fonts.googleapis.com/css2?family=Arima+Madurai&display=swap" rel="stylesheet">
     <title>{% block title %}OuistitiSorties{% endblock %}</title>
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+    <script type="javascript" src="{{ asset('js/app.js') }}"></script>
     <link rel="icon" href="{{ asset('img/favicon.png') }}">
 </head>
 
 <body>
-    <header>
-        {% include('inc/nav.html.twig') %}
-    </header>
-    <main>
-        {% for label, messages in app.flashes %}
-            {% for message in messages %}
-                <div class="flash flash-{{ label }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
+<header>
+    {% include('inc/nav.html.twig') %}
+</header>
+<main>
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="flash flash-{{ label }}">
+                {{ message }}
+            </div>
         {% endfor %}
+    {% endfor %}
 
-        {% block body %}
-            Bienvenue sur la page par défaut.
-        {% endblock %}
-    </main>
-    <footer>
-    </footer>
+    {% block body %}
+        Bienvenue sur la page par défaut.
+    {% endblock %}
+</main>
+<footer>
+</footer>
 
 </body>
 

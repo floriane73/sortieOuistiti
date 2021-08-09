@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MainController!{% endblock %}
+{% block title %}{{ parent() }}{% endblock %}
 
 {% block body %}
     <style>
@@ -18,36 +18,35 @@
     </style>
 
     <div class="example-wrapper">
-
         <h1>Liste des sorties</h1>
+        <div class="js-filter">
+            <div class="js-filter-form">
+                {% include 'main/_filtres.html.twig' with {formFiltres: formFiltres} %}
+            </div>
+            <div class="js-filter-content">
+                <table>
+                    <tr>
+                        <div class="js-filter-sorting">
+                            <th>{{ knp_pagination_sortable(listeSorties, 'Nom', 'sortie.nom') }}</th>
+                            <th>{{ knp_pagination_sortable(listeSorties, 'Date sortie', 'sortie.dateHeureDebut') }}</th>
+                            <th>{{ knp_pagination_sortable(listeSorties, 'Clôture', 'sortie.dateLimiteInscription') }}</th>
+                        </div>
+                        <th>Inscrits</th>
+                        <th>Etat</th>
+                        <th>Inscrit</th>
+                        <th>Organisateur</th>
+                        <th>actions</th>
+                    </tr>
+                    {% include 'main/_sorties.html.twig' with {listeSorties: listeSorties} %}
+                </table>
+            </div>
 
-        <div class="js-filter-form">
-            {% include 'main/_filtres.html.twig' with {formFiltres: formFiltres} %}
-        </div>
-        <div class="js-filter-content">
-            <table>
-                <tr>
-                    <div class="js-filter-sorting">
-                        <th>{{ knp_pagination_sortable(listeSorties, 'Nom', 'sortie.nom') }}</th>
-                        <th>{{ knp_pagination_sortable(listeSorties, 'Date sortie', 'sortie.dateHeureDebut') }}</th>
-                        <th>{{ knp_pagination_sortable(listeSorties, 'Clôture', 'sortie.dateLimiteInscription') }}</th>
-                    </div>
-                    <th>Inscrits</th>
-                    <th>Etat</th>
-                    <th>Inscrit</th>
-                    <th>Organisateur</th>
-                    <th>actions</th>
-                </tr>
-            {% include 'main/_sorties.html.twig' with {listeSorties: listeSorties} %}
-            </table>
-        </div>
-
-
-        <div id="pagination" class="js-filter-pagination">
-            {{ knp_pagination_render(listeSorties) }}
-        </div>
-        <div>
-            <a href="{{ path('sortie_ajout') }}" class="ajoutSortie">Créer une sortie</a>
+            <div id="pagination" class="js-filter-pagination">
+                {{ knp_pagination_render(listeSorties) }}
+            </div>
+            <div>
+                <a href="{{ path('sortie_ajout') }}" class="ajoutSortie">Créer une sortie</a>
+            </div>
         </div>
     </div>
 {% endblock %}
