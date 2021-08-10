@@ -111,12 +111,13 @@ th{
     text-align: left;
     background-color: rgba(255, 185, 139, 0.42);
 }
-
+tr:hover{
+    color: gray;
+}
 #pagination{
     margin-bottom: 3rem;
 }
 .ajoutSortie{
-
     padding: 1rem;
     border: 1px solid rgba(87, 55, 55, 0.8);
     background-color: rgba(255, 210, 188, 0.76);
