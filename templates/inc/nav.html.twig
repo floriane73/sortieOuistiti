@@ -2,10 +2,10 @@
 
 <nav>
     <ul>
-        <li><a href="{{ path('main_index') }}" title="Home" {% if page == "main_index" %} class = "active" {% endif %}>Accueil</a></li>
 
         {% if app.user %}
 
+            <li><a href="{{ path('main_index') }}" title="Home" {% if page == "main_index" %} class = "active" {% endif %}>Accueil</a></li>
             <li><a href="{{ path('user_modifier_profil') }}" title="Afficher mon profil" {% if page == "user_modifier_profil" %} class = "active" {% endif %}>Mon profil</a></li>
             <li><a href="{{ path('app_logout') }}" title="Logout" {% if page == "app_login" %} class = "active" {% endif %}>Se déconnecter ({{ app.user.pseudo }})</a></li>
 
