@@ -19,12 +19,11 @@
             <td>{{ user.prenom }}</td>
             <td>{{ user.pseudo }}</td>
             <td>{{ user.email }}</td>
-            <td><a href="{{ path('user_supprimer_profil', {'id': user.id, 'backToDashboard': 1}) }}" alt="supprimer">Supprimer</a></td>
+            <td><button><a href="{{ path('user_supprimer_profil', {'id': user.id, 'backToDashboard': 1}) }}" alt="supprimer">Supprimer</a></button>
+                <button><a href="{{ path('user_desactiver_utilisateur', {'id': user.id, 'backToDashboard': 1}) }}" alt="desactiver">Désactiver</a></button></td>
         </tr>
     {% endfor %}
 </table>
-
-
 {% endblock %}
 
 {% block title %}
