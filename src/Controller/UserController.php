@@ -7,7 +7,9 @@ use App\Entity\User;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -96,15 +98,34 @@ class   UserController extends AbstractController
     /**
      * @Route("/supprimer/{id}", name="supprimer_profil")
      */
-    public function supprimer(int $id, EntityManagerInterface $entityManager)
+    public function supprimer(int $id, EntityManagerInterface $entityManager, Request $request)
     {
         $user = $entityManager->getRepository(User::class)->find($id);
 
         $entityManager->remove($user);
         $entityManager->flush();
 
-        $this->addFlash("success", "L'utilisateur a bien été effacé !");
+        $this->addFlash("success", "L'utilisateur ". $id." a bien été effacé !");
+        if($request->get('backToDashboard') == 1){
+            return $this->redirectToRoute('user_supprimer_utilisateurs');
+
+        }
+
         return $this->redirectToRoute('main_index');
+
+    }
+
+    /**
+     * @Route("/supprimerUtilisateurs", name="supprimer_utilisateurs")
+     */
+    public function supprimerUtilisateurs(EntityManagerInterface $entityManager, Request $request)
+    {
+        $allUsers = $entityManager->getRepository(User::class)->findAll();
+
+        return $this->render("/user/supprimerUtilisateurs.html.twig",[
+           "allUsers" => $allUsers
+        ]);
+
 
     }
 
