@@ -1,5 +1,7 @@
-require('../css/app.css');
+import Filtre from './modules/Filtre.js';
+//require('../css/app.css');
 
-import Filtre from './modules/Filtre';
 
-new Filtre(document.querySelector('.js-filter'));
+window.onload = () => {
+    new Filtre(document.querySelector('.js-filter'));
+}

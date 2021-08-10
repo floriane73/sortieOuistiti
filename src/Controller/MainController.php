@@ -10,6 +10,7 @@ use JMS\Serializer\SerializerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -45,15 +46,14 @@ class MainController extends AbstractController
 
         $listeSorties = $sortieRepository->getSortiesByFilters($filtres, $userId);
 
-        /*if($request->get('ajax')) {
-            $data= $serializer->serialize($listeSorties, 'json');
-            $response = new Response($data);
-            $response->headers->set('Content-Type', 'application/json');
-            return $response;
-        }*/
-
-        dump($listeSorties);
-
+        if($request->get('ajax')) {
+            return new JsonResponse([
+                'content' => $this->renderView('main/_sorties.html.twig', ['listeSorties'=>$listeSorties]),
+                'sorting' => $this->renderView('main/_sorting.html.twig', ['listeSorties'=>$listeSorties]),
+                'pagination' => $this->renderView('main/_pagination.html.twig', ['listeSorties'=>$listeSorties]),
+                'pages' => ceil($listeSorties->getTotalItemCount() / $listeSorties->getItemNumberPerPage())
+            ]);
+        }
         return $this->render('main/index.html.twig',[
             'listeSorties'=>$listeSorties,
             'formFiltres'=>$form->createView()

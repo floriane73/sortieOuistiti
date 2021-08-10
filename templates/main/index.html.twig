@@ -20,17 +20,13 @@
     <div class="example-wrapper">
         <h1>Liste des sorties</h1>
         <div class="js-filter">
-            <div class="js-filter-form">
+            <div>
                 {% include 'main/_filtres.html.twig' with {formFiltres: formFiltres} %}
             </div>
             <div class="js-filter-content">
                 <table>
-                    <tr>
-                        <div class="js-filter-sorting">
-                            <th>{{ knp_pagination_sortable(listeSorties, 'Nom', 'sortie.nom') }}</th>
-                            <th>{{ knp_pagination_sortable(listeSorties, 'Date sortie', 'sortie.dateHeureDebut') }}</th>
-                            <th>{{ knp_pagination_sortable(listeSorties, 'Clôture', 'sortie.dateLimiteInscription') }}</th>
-                        </div>
+                    <tr class="js-filter-sorting">
+                        {% include 'main/_sorting.html.twig' with {listeSorties: listeSorties} %}
                         <th>Inscrits</th>
                         <th>Etat</th>
                         <th>Inscrit</th>
@@ -40,9 +36,8 @@
                     {% include 'main/_sorties.html.twig' with {listeSorties: listeSorties} %}
                 </table>
             </div>
-
-            <div id="pagination" class="js-filter-pagination">
-                {{ knp_pagination_render(listeSorties) }}
+            <div class="js-filter-pagination">
+                {% include 'main/_pagination.html.twig' with {listeSorties: listeSorties} %}
             </div>
             <div>
                 <a href="{{ path('sortie_ajout') }}" class="ajoutSortie">Créer une sortie</a>
