@@ -12,6 +12,7 @@
             {% if is_granted("ROLE_ADMIN") %}
                 <li><a href="{{ path('app_register') }}" title="Créer un nouveau compte" {% if page == "app_register" %} class = "active" {% endif %}>Enregistrer un étudiant</a></li>
                 <li><a href="{{ path('app_registerListe') }}" title="Enregistrer une liste d'étudiants" {% if page == "app_registerListe" %} class = "active" {% endif %}>Enregistrer une liste d'étudiants</a></li>
+                <li><a href="{{ path('user_supprimer_utilisateurs') }}" title="Supprimer des utilisateurs" {% if page == "user_supprimer_utilisateurs" %} class = "active" {% endif %}>Supprimer des utilisateurs</a></li>
                 <li><a href="{{ path('lieu') }}" title="Gestion villes">Villes</a></li>
                 <li><a href="{{ path('lieu') }}" title="Gestion campus">Campus</a></li>
             {% endif %}
