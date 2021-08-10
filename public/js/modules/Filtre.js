@@ -14,8 +14,8 @@ export default class Filtre {
             return;
         }
         this.pagination = element.querySelector('.js-filter-pagination')
-        this.content = element.querySelector('.js-filter-content')
         this.sorting = element.querySelector('.js-filter-sorting')
+        this.content = element.querySelector('.js-filter-content')
         this.form = element.querySelector('.js-filter-form')
 
         this.bindEvents()
@@ -38,6 +38,9 @@ export default class Filtre {
         })
     }
 
+    /**
+     * Charge les paramètres selon l'url envoyée par le formulaire
+     */
     async loadForm() {
         const data = new FormData(this.form)
         const url = new URL(this.form.getAttribute('action') || window.location.href)
@@ -48,23 +51,25 @@ export default class Filtre {
         return this.loadUrl(url.pathname + '?' + params.toString())
     }
 
-    async loadUrl (url, append = false) {
-        const params = new URLSearchParams(url.split('?')[1] || '')
-        params.set('ajax', 1)
+    /**
+     * Charge un json à partir de l'url donnée par le formulaire
+     */
+    async loadUrl(url, append = false) {
+        const params = new URLSearchParams(url.split('?')[1] || '')        //paramètres dans ajaxURL in params
         const response = await fetch(url.split('?')[0] + '?' + params.toString(), {
-            headers : {
-                'X-Requested-With': 'XMLHttpRequest'
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
             }
-        })
-        if (response.status >=200 && response.status<300) {
+        )
+        if (response.status >= 200 && response.status < 300) {
             const data = await response.json()
-            this.content.innerHTML = data.content
-            this.sorting.innerHTML = data.sorting
-            this.pagination.innerHTML = data.pagination
-            history.replaceState({},'', url)
+            this.content.innerHTML = data.content;
+            this.sorting.innerHTML = data.sorting;
+            this.pagination.innerHTML = data.pagination;
+            history.replaceState({}, '', url)
         } else {
             console.error(response)
         }
     }
-
 }

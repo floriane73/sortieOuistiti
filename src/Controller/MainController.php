@@ -39,25 +39,21 @@ class MainController extends AbstractController
 
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // data is an array with "name", "email", and "message" keys
-            $data = $form->getData();
-        }
-
         $listeSorties = $sortieRepository->getSortiesByFilters($filtres, $userId);
 
-        if($request->get('ajax')) {
+        if($request->isXmlHttpRequest()) {
             return new JsonResponse([
                 'content' => $this->renderView('main/_sorties.html.twig', ['listeSorties'=>$listeSorties]),
                 'sorting' => $this->renderView('main/_sorting.html.twig', ['listeSorties'=>$listeSorties]),
                 'pagination' => $this->renderView('main/_pagination.html.twig', ['listeSorties'=>$listeSorties]),
-                'pages' => ceil($listeSorties->getTotalItemCount() / $listeSorties->getItemNumberPerPage())
+                //'pages' => ceil($listeSorties->getTotalItemCount() / $listeSorties->getItemNumberPerPage())
+            ]);
+        } else {
+            return $this->render('main/index.html.twig',[
+                'listeSorties'=>$listeSorties,
+                'formFiltres'=>$form->createView()
             ]);
         }
-        return $this->render('main/index.html.twig',[
-            'listeSorties'=>$listeSorties,
-            'formFiltres'=>$form->createView()
-        ]);
     }
 
     /**

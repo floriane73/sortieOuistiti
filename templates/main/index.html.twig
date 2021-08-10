@@ -23,25 +23,16 @@
             <div>
                 {% include 'main/_filtres.html.twig' with {formFiltres: formFiltres} %}
             </div>
-            <div class="js-filter-content">
-                <table>
-                    <tr class="js-filter-sorting">
-                        {% include 'main/_sorting.html.twig' with {listeSorties: listeSorties} %}
-                        <th>Inscrits</th>
-                        <th>Etat</th>
-                        <th>Inscrit</th>
-                        <th>Organisateur</th>
-                        <th>actions</th>
-                    </tr>
-                    {% include 'main/_sorties.html.twig' with {listeSorties: listeSorties} %}
-                </table>
-            </div>
+            <table class="js-filter-content">
+                {% include 'main/_sorties.html.twig' with {listeSorties: listeSorties} %}
+            </table>
             <div class="js-filter-pagination">
                 {% include 'main/_pagination.html.twig' with {listeSorties: listeSorties} %}
             </div>
-            <div>
-                <a href="{{ path('sortie_ajout') }}" class="ajoutSortie">Créer une sortie</a>
-            </div>
+        </div>
+        <br>
+        <div>
+            <a href="{{ path('sortie_ajout') }}" class="ajoutSortie">Créer une sortie</a>
         </div>
     </div>
 {% endblock %}

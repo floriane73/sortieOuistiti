@@ -1,3 +1,11 @@
+    <tr class="js-filter-sorting">
+        {% include 'main/_sorting.html.twig' with {listeSorties: listeSorties} %}
+        <th>Inscrits</th>
+        <th>Etat</th>
+        <th>Inscrit</th>
+        <th>Organisateur</th>
+        <th>actions</th>
+    </tr>
 {% for sortie in listeSorties %}
     <tr>
         <td>{{ sortie.nom }}</td>
