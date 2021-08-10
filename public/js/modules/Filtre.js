@@ -32,6 +32,7 @@ export default class Filtre {
             }
         }
         this.sorting.addEventListener('click', aListener)
+        this.content.addEventListener('click', aListener)
         this.pagination.addEventListener('click', aListener)
         this.form.querySelectorAll('input, select').forEach(input => {
             input.addEventListener('change', this.loadForm.bind(this))
@@ -43,8 +44,9 @@ export default class Filtre {
      */
     async loadForm() {
         const data = new FormData(this.form)
-        const url = new URL(this.form.getAttribute('action') || window.location.href)
         const params = new URLSearchParams()
+        const url = new URL(this.form.getAttribute('action') || window.location.href)
+
         data.forEach((value, key) => {
             params.append(key, value)
         })
@@ -55,7 +57,7 @@ export default class Filtre {
      * Charge un json à partir de l'url donnée par le formulaire
      */
     async loadUrl(url, append = false) {
-        const params = new URLSearchParams(url.split('?')[1] || '')        //paramètres dans ajaxURL in params
+        const params = new URLSearchParams(url.split('?')[1] || '')
         const response = await fetch(url.split('?')[0] + '?' + params.toString(), {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
@@ -64,10 +66,11 @@ export default class Filtre {
         )
         if (response.status >= 200 && response.status < 300) {
             const data = await response.json()
-            this.content.innerHTML = data.content;
             this.sorting.innerHTML = data.sorting;
+            this.content.innerHTML = data.content;
             this.pagination.innerHTML = data.pagination;
-            history.replaceState({}, '', url)
+
+            history.replaceState({}, null, url)
         } else {
             console.error(response)
         }

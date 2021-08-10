@@ -4,7 +4,7 @@
     <ul class="col-12 col-s-12">
         {% if app.user %}
 
-            <li class="col-1 col-s-12"><a href="{{ path('main_index') }}" title="Home" {% if page == "main_index" %} class = "active" {% endif %}>Accueil</a></li>
+            <li class="col-1 col-s-12"><a href="{{ path('main_index') }}" title="Home">Accueil</a></li>
             <li class="col-1 col-s-12"><a href="{{ path('user_modifier_profil') }}" title="Afficher mon profil" {% if page == "user_modifier_profil" %} class = "active" {% endif %}>Mon profil</a></li>
             <li class="col-2 col-s-12"><a href="{{ path('app_logout') }}" title="Logout" {% if page == "app_login" %} class = "active" {% endif %}>Se déconnecter ({{ app.user.pseudo }})</a></li>
 
