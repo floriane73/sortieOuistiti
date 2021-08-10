@@ -1,5 +1,18 @@
-{{ form_start(formFiltres) }}
 
-{{ form_widget(formFiltres) }}
-<button>Chercher</button>
-{{ form_end(formFiltres) }}
+<div id="filtres">
+<div class="filtres col-8 col-s-8">
+    <div class="col-12 col-s-12"> {{ form_row(formFiltres.campus)}}</div>
+    <div class="col-12 col-s-12"> {{ form_row(formFiltres.q)}}</div>
+    <div class="col-6 col-s-6"> {{ form_row(formFiltres.dateMin)}}</div>
+    <div class="col-6 col-s-6"> {{ form_row(formFiltres.dateMax)}}</div>
+</div>
+<div class="filtres col-3 col-s-3">
+    {{ form_row(formFiltres.isOrganisateur)}}
+    {{ form_row(formFiltres.isParticipant)}}
+    {{ form_row(formFiltres.isNotParticipant)}}
+    {{ form_row(formFiltres.isSortiePassee)}}
+</div>
+<div class="col-1 col-s-1">
+    <button>Chercher</button>
+</div>
+</div>

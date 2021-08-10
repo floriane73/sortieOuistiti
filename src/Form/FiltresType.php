@@ -19,44 +19,44 @@ class FiltresType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('q', TextType::class, [
-            'label' => false,
+            'label' => 'Le nom de la sortie contient : ',
             'required' => false,
             'attr' => [
                 'placeholder' => 'Recherche par nom'
             ]
         ])
             ->add('campus', EntityType::class, [
-                'label' => 'Campus',
+                'label' => 'Campus ',
                 'required' => false,
                 'class' => Campus::class,
                 'choice_label' => 'nom'
             ])
             ->add('dateMin', DateType::class, [
-                'label' => 'Après le ',
+                'label' => 'Après le  ',
                 'required' => false,
                 'html5' => true,
                 'widget' => 'single_text'
             ])
             ->add('dateMax', DateType::class, [
-                'label' => 'Avant le ',
+                'label' => 'Avant le  ',
                 'required' => false,
                 'html5' => true,
                 'widget' => 'single_text'
             ])
             ->add('isOrganisateur', CheckboxType::class, [
-                'label' => 'J\'organise',
+                'label' => 'J\'organise ',
                 'required' => false
             ])
             ->add('isParticipant', CheckboxType::class, [
-                'label' => 'Inscrit',
+                'label' => 'Inscrit ',
                 'required' => false
             ])
             ->add('isNotParticipant', CheckboxType::class, [
-                'label' => 'Non inscrit',
+                'label' => 'Non inscrit ',
                 'required' => false
             ])
             ->add('isSortiePassee', CheckboxType::class, [
-                'label' => 'Terminées',
+                'label' => 'Terminées ',
                 'required' => false
             ]);
 
