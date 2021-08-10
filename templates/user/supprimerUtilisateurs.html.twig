@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    <h1>Liste des utilisateurs</h1>
+<table>
+    <th>ID</th>
+    <th>Photo</th>
+    <th>Nom</th>
+    <th>Prénom</th>
+    <th>Pseudo</th>
+    <th>Email</th>
+    <th>Action</th>
+    {% for user in allUsers %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{% if user.avatarPath != null %}<img src="{{ asset('uploads/avatar/'~ user.avatarPath) }}" title="photo {{ user.pseudo }}" height="90px">{% else %} Aucune photo {% endif %}</td>
+            <td>{{ user.nom }}</td>
+            <td>{{ user.prenom }}</td>
+            <td>{{ user.pseudo }}</td>
+            <td>{{ user.email }}</td>
+            <td><button><a href="{{ path('user_supprimer_profil', {'id': user.id, 'backToDashboard': 1}) }}" alt="supprimer">Supprimer</a></button>
+                <button><a href="{{ path('user_desactiver_utilisateur', {'id': user.id, 'backToDashboard': 1}) }}" alt="desactiver">Désactiver</a></button></td>
+        </tr>
+    {% endfor %}
+</table>
+{% endblock %}
+
+{% block title %}
+{{ parent() }} | Supprimer utilisateurs
+{% endblock %}
+

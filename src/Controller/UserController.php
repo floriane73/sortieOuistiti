@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\EtatSortie;
 use App\Entity\User;
+use App\Form\AnnulerSortieType;
 use App\Form\UserType;
+use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -90,6 +93,70 @@ class   UserController extends AbstractController
      return $this->render("user/afficher.html.twig", [
         'profil' => $result
      ]);
+    }
+
+    /**
+     * @Route("/supprimer/{id}", name="supprimer_profil")
+     */
+    public function supprimer(int $id, EntityManagerInterface $entityManager, Request $request)
+    {
+        $userCurrent = $entityManager->getRepository(User::class)->find($id);
+        if($userCurrent->getAdministrateur()){
+            $this->addFlash('error', 'Vous ne pouvez pas supprimer un administrateur');
+            return $this->redirectToRoute('user_supprimer_utilisateurs');
+        }
+
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $this->addFlash("success", "L'utilisateur ". $id." a bien été effacé !");
+        if($request->get('backToDashboard') == 1){
+            return $this->redirectToRoute('user_supprimer_utilisateurs');
+
+        }
+
+        return $this->redirectToRoute('main_index');
+
+    }
+
+    /**
+     * @Route("/supprimerUtilisateurs", name="supprimer_utilisateurs")
+     */
+    public function supprimerUtilisateurs(EntityManagerInterface $entityManager, Request $request)
+    {
+        $allUsers = $entityManager->getRepository(User::class)->findAll();
+
+        return $this->render("/user/supprimerUtilisateurs.html.twig",[
+           "allUsers" => $allUsers
+        ]);
+    }
+
+    /**
+     * @Route("/desactiver/{id}", name="desactiver_utilisateur")
+     */
+    public function desactiver(int $id, EntityManagerInterface $entityManager, UserRepository $userRepository, SortieRepository $sortieRepository)
+    {
+        $user = $entityManager->getRepository(User::class)->find($id);
+
+        $userSorties = $sortieRepository->findBy(array('participantOrganisateur' => $id));
+        $sortieAnnulee = $entityManager->getRepository(EtatSortie::class)->find(4);
+
+        foreach($userSorties as $sortie){
+            $description = $sortie->getDescription();
+            $sortie->setDescription("SORTIE ANNULEE - ".$description);
+            $sortie->setEtatSortie($sortieAnnulee);
+           // $user->setRoles(["ROLE_DESACTIVE"]);
+        }
+
+        $user->setActif(false);
+        $entityManager->persist($user);
+        $entityManager->flush();
+
+        $this->addFlash('success', 'Utilisateur '.$id.' a bien été désactivé !');
+        return $this->redirectToRoute('user_supprimer_utilisateurs');
+
     }
 
 }
