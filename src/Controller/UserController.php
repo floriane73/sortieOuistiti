@@ -154,6 +154,7 @@ class   UserController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
+        $this->addFlash('success', 'Utilisateur '.$id.' a bien été désactivé !');
         return $this->redirectToRoute('user_supprimer_utilisateurs');
 
     }
