@@ -82,26 +82,42 @@ class SortieController extends AbstractController
     /**
      * @Route ("/modifier/{id}", name="modifier")
      */
-    //todo: mettre en place le formulaire de modification
-
     public function modifier(
         $id,
-        SortieRepository $sortieRepository
+        Request $request,
+        SortieRepository $sortieRepository,
+        EntityManagerInterface $entityManager
     )
     {
-        $connectedUser = $this->getUser();
+        $sortie = $sortieRepository->getSortieById($id);
+        $user = $this->getUser();
 
-        $sortieAffichee = $sortieRepository->getSortieById($id);
+        if ($sortie->getParticipantOrganisateur()->getId() !== $user->getId()) {
+            return $this->redirectToRoute('main_index');
+        }
 
+        $sortieForm = $this->createForm(SortieType::class,$sortie);
+        $sortieForm->handleRequest($request);
 
-        return $this->render('sortie/details.html.twig', [
-            "sortieAffichee" => $sortieAffichee
+        if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
+            $sortie = $sortieForm->getData();
+
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $this->addFlash('success', "Les modifications ont été correctement effectuées !");
+            return $this->redirectToRoute('sortie_modifier', ['id'=> $id]);
+        }
+
+        return $this->render('sortie/modifier.html.twig', [
+            'sortieForm' => $sortieForm->createView(),
+            'sortie' => $sortie
         ]);
     }
 
 
     /**
-     * @Route("/details/sedesister/{id}", name="details_sedesister")
+     * @Route("/sedesister/{id}", name="details_sedesister")
      */
     public function seDesister(int $id, EntityManagerInterface $entityManager)
     {
@@ -118,7 +134,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/details/inscription/{id}", name="details_inscription")
+     * @Route("/inscription/{id}", name="details_inscription")
      */
     public function inscription(int $id, EntityManagerInterface $entityManager)
     {
@@ -174,7 +190,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/details/supprimer/{id}", name="details_supprimer")
+     * @Route("/supprimer/{id}", name="details_supprimer")
      */
     public function supprimer(int $id, EntityManagerInterface $entityManager)
     {
@@ -188,7 +204,7 @@ class SortieController extends AbstractController
     }
 
     /**
-     * @Route("/details/annuler/{id}", name="details_annuler")
+     * @Route("/annuler/{id}", name="details_annuler")
      */
     public function annuler(int $id, EntityManagerInterface $entityManager, Request $request)
     {

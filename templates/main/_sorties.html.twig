@@ -26,7 +26,7 @@
                 ❌
             {% endif %}
         </td>
-        <td><a class="clickable" href="{{ path('user_afficher_profil', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.nom }}</a></td>
+        <td><a class="clickable" href="{{ path('user_afficher_profil', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.pseudo }}</a></td>
 
         <td>
             {% if sortie.participantOrganisateur.id is same as(app.user.id) %}
