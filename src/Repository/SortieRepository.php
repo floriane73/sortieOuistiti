@@ -43,7 +43,6 @@ class SortieRepository extends ServiceEntityRepository
 
         $queryBuilder->addOrderBy('sortie.dateHeureDebut', 'ASC');
 
-
         return $queryBuilder->getQuery()->getResult();
     }
 
@@ -60,25 +59,15 @@ class SortieRepository extends ServiceEntityRepository
         $queryBuilder->where('sortie.id = :id');
         $queryBuilder->setParameter('id', $id);
 
-
         return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
+    public function updateAllEtats() {
+        $queryBuilder = $this->createQueryBuilder('sortie');
     }
 
     public function getSortiesByFilters(FiltresData $filtres, $userId)
     {
-        /*
-                                        $keywords = null,
-                                        $idOrganisateur = null,
-                                        $idParticipant = null,
-                                        $idNonParticipant=null,
-                                        $idCampus = null,
-                                        $dateMin = null,
-                                        $dateMax = null,
-                                        $idEtat = null,
-                                        $pageN = 0
-        */
-
-
         $queryBuilder = $this->createQueryBuilder('sortie')
             ->select('sortie', 'camp', 'orga', 'inscrits', 'etat', 'lieu', 'ville')
             ->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp = sortie.campus')
@@ -88,7 +77,6 @@ class SortieRepository extends ServiceEntityRepository
             ->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu = sortie.lieu')
             ->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville = lieu.ville')
             ->andWhere("CURRENT_DATE()<= DATE_ADD(sortie.dateHeureDebut,30, 'day')");
-
 
         if (!empty($filtres->q)) {
             $queryBuilder->andWhere('sortie.nom LIKE :words')
@@ -124,14 +112,11 @@ class SortieRepository extends ServiceEntityRepository
             $queryBuilder->andWhere('etat.id = :etat')
                 ->setParameter('etat', 3);
         }
-
         $queryBuilder->addOrderBy('sortie.dateLimiteInscription', 'ASC');
 
         $pageN = 0;
 
         $queryBuilder->setMaxResults(10)->setFirstResult($pageN*10);
-
-        //$queryBuilder->getQuery()->getResult();
 
         $results = $this->paginator->paginate(
             $queryBuilder,
@@ -140,6 +125,5 @@ class SortieRepository extends ServiceEntityRepository
         );
 
         return $results;
-
     }
 }
