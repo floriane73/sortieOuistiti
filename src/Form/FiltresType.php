@@ -29,7 +29,8 @@ class FiltresType extends AbstractType
                 'label' => 'Campus ',
                 'required' => false,
                 'class' => Campus::class,
-                'choice_label' => 'nom'
+                'choice_label' => 'nom',
+                'placeholder' => 'Tous'
             ])
             ->add('dateMin', DateType::class, [
                 'label' => 'Après le  ',
