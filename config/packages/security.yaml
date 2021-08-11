@@ -54,10 +54,4 @@ security:
         - { path: ^/user/supprimerUtilisateurs, roles: ROLE_ADMIN }
 
         - { path: ^/sortie/details/*, roles: ROLE_USER }
-
-        - { path: ^/home, roles: [ROLE_DESACTIVE] }
-        - { path: ^/user, roles: [ROLE_DESACTIVE] }
-
-
-
-
+        - { path: ^/user/modifier, roles: ROLE_USER }

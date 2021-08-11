@@ -58,7 +58,7 @@ export default class Filtre {
      */
     async loadUrl(url, append = false) {
         const params = new URLSearchParams(url.split('?')[1] || '')
-        const response = await fetch(url.split('?')[0] + '?' + params.toString(), {
+        const response = await fetch(url.split('?')[0] + '?' + params.toString() + '&ajax=1', {
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
                 }

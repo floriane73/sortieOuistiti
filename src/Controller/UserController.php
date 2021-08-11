@@ -141,13 +141,19 @@ class   UserController extends AbstractController
     {
         $user = $entityManager->getRepository(User::class)->find($id);
 
-        $userSorties = $sortieRepository->findBy(array('participantOrganisateur' => $id));
+        $userSortiesInscrit = $user->getSortiesChoisies();
+        $userSortiesOrganise = $user->getSortiesOrganisees();
         $sortieAnnulee = $entityManager->getRepository(EtatSortie::class)->find(4);
 
-        foreach($userSorties as $sortie){
+        foreach($userSortiesOrganise as $sortie){
             $description = $sortie->getDescription();
             $sortie->setDescription("SORTIE ANNULEE - ".$description);
             $sortie->setEtatSortie($sortieAnnulee);
+        }
+
+        foreach ($userSortiesInscrit as $sortieInscrit)
+        {
+            $sortieInscrit->removeParticipantsInscrit($user);
         }
 
         $user->setActif(false);

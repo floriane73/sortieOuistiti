@@ -9,8 +9,8 @@
 {% for sortie in listeSorties %}
     <tr>
         <td>{{ sortie.nom }}</td>
-        <td>{{ sortie.dateHeureDebut|format_datetime(pattern='d MMM Y à h:m', locale='fr') }}</td>
-        <td>{{ sortie.dateLimiteInscription|date('d/m/Y', 'Europe/Paris') }}</td>
+        <td>{{ sortie.dateHeureDebut | format_datetime(pattern='d MMM Y à h:m', locale='fr') }}</td>
+        <td>{{ sortie.dateLimiteInscription | date('d/m/Y', 'Europe/Paris') }}</td>
         <td>
             {% if sortie.nbInscriptionsMax is not null %}
                 {{ sortie.participantsInscrits.count }} / {{ sortie.nbInscriptionsMax }}

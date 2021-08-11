@@ -62,7 +62,8 @@ class SortieRepository extends ServiceEntityRepository
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
 
-    public function updateAllEtats() {
+    public function updateAllEtats()
+    {
         $nbModifs = 0;
         /*          -- états --
          * 1 - Ouvert ( today < cloture )
@@ -77,41 +78,41 @@ class SortieRepository extends ServiceEntityRepository
             ->where('etat.id != 5');
 
 
-
-
         return $nbModifs;
     }
 
     public function getSortiesByFilters(FiltresData $filtres, $userId)
     {
         $queryBuilder = $this->createQueryBuilder('sortie')
-            ->select('sortie', 'camp', 'orga', 'inscrits', 'etat', 'lieu', 'ville')
-            ->innerJoin('sortie.campus', 'camp', Join::WITH, 'camp = sortie.campus')
-            ->innerJoin('sortie.participantOrganisateur', 'orga', Join::WITH, 'orga = sortie.participantOrganisateur')
-            ->leftJoin('sortie.participantsInscrits', 'inscrits')
-            ->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat = sortie.etatSortie')
-            ->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu = sortie.lieu')
-            ->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville = lieu.ville')
-            ->andWhere("CURRENT_DATE()<= DATE_ADD(sortie.dateHeureDebut,30, 'day')");
+            ->select('sortie', 'camp', 'orga', 'etat', 'lieu', 'ville')
+            ->innerJoin('sortie.campus', 'camp')
+            ->innerJoin('sortie.participantOrganisateur', 'orga')
+            ->innerJoin('sortie.etatSortie', 'etat')
+            ->innerJoin('sortie.lieu', 'lieu')
+            ->innerJoin('lieu.ville', 'ville');
 
         if (!empty($filtres->q)) {
             $queryBuilder->andWhere('sortie.nom LIKE :words')
                 ->setParameter('words', '%' . $filtres->q . '%');
         }
         if (!empty($filtres->isOrganisateur)) {
-            $queryBuilder->andWhere('orga.id = :organisateur')
-                ->setParameter('organisateur', $userId);
+            $queryBuilder->andWhere('orga.id = :organisateurId')
+                ->setParameter('organisateurId', $userId);
         }
-        if (!empty($filtres->isParticipant)) {
-            $queryBuilder->leftJoin('sortie.participantsInscrits', 'usr')
-                ->andWhere('usr.id = :participant')
-                ->setParameter('participant', $userId);
+
+        $queryBuilder->leftJoin('sortie.participantsInscrits', 'usr')
+            ->addSelect('usr');
+        if (!(!empty($filtres->isParticipant) && !empty($filtres->isNotParticipant))) {
+            if (!empty($filtres->isParticipant)) {
+                $queryBuilder->andWhere('usr.id = :participantId')
+                    ->setParameter('participantId', $userId);
+            }
+            if (!empty($filtres->isNotParticipant)) {
+                $queryBuilder->andWhere('usr.id != :participantId')
+                    ->setParameter('participantId', $userId);
+            }
         }
-        if (!empty($filtres->isNotParticipant)) {
-            $queryBuilder->leftJoin('sortie.participantsInscrits', 'usr2')
-            ->andWhere('usr2.id != :nonParticipant')
-                ->setParameter('nonParticipant', $userId);
-        }
+
         if (!empty($filtres->campus)) {
             $queryBuilder->andWhere('camp = :campus')
                 ->setParameter('campus', $filtres->campus);
@@ -128,11 +129,9 @@ class SortieRepository extends ServiceEntityRepository
             $queryBuilder->andWhere('etat.id = :etat')
                 ->setParameter('etat', 4);
         }
+        $queryBuilder->andWhere("CURRENT_DATE() <= DATE_ADD(sortie.dateHeureDebut, 30, 'day')");
+
         $queryBuilder->addOrderBy('sortie.dateLimiteInscription', 'ASC');
-
-        $pageN = 0;
-
-        $queryBuilder->setMaxResults(10)->setFirstResult($pageN*10);
 
         $results = $this->paginator->paginate(
             $queryBuilder,
