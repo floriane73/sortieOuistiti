@@ -29,6 +29,8 @@ class SortieController extends AbstractController
         SortieRepository $sortieRepository
     )
     {
+        //$this->denyAccessUnlessGranted('ROLE_USER');
+
         $connectedUser = $this->getUser();
 
         $sortieAffichee = $sortieRepository->getSortieById($id);
