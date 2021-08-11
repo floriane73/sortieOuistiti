@@ -10,10 +10,12 @@ body {
     min-height: 100vh;
 }
 .container {
+    background: rgba(253, 247, 247, 0.89);
     min-width: 1500px;
     margin: auto;
     padding: 5px;
     box-shadow: 0 0 1rem #8d8a8a;
+
 }
 body > .container {
     display: flex;
@@ -21,7 +23,7 @@ body > .container {
     min-height: 100vh;
 }
 header{
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgb(68, 61, 61);
     color: #DDDDDD;
     padding: 20px;
 }
@@ -103,14 +105,14 @@ table{
     border : 1px solid rgba(175, 123, 123, 0.58);
 }
 
-tr:nth-child(even) {background-color: rgba(255, 225, 218, 0.83);}
+tr:nth-child(even) {background-color: rgba(217, 191, 186, 0.41);}
 
 th, td{
     padding: 10px;
 }
 th{
     text-align: left;
-    background-color: rgba(255, 185, 139, 0.42);
+    background-color: rgba(68, 61, 61, 0.49);
 }
 tr:hover{
     color: gray;
@@ -118,6 +120,14 @@ tr:hover{
 #pagination{
     margin-bottom: 3rem;
 }
+
+button{
+   border: none;
+    background-color: rgba(68, 61, 61, 0.2);
+    padding: 5px 10px 5px 10px;
+    border-radius: 5px;
+}
+
 .ajoutSortie{
     padding: 1rem;
     border: 1px solid rgba(87, 55, 55, 0.8);

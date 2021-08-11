@@ -1,7 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Profil</h1>
+
+    <h1>Mon profil</h1>
     {% for label, messages in app.flashes %}
         {% for message in messages %}
             <div class="flash-{{ label }}">
@@ -9,7 +10,6 @@
             </div>
         {% endfor %}
     {% endfor %}
-
     {% if app.user.avatarPath %}
         <img src='{{ asset('uploads/avatar/'~ app.user.avatarPath) }}' alt='avatar' width="200">
     {% endif %}
@@ -32,8 +32,7 @@
 
     <button type="submit">Enregistrer</button>
     <button type="reset">Annuler</button>
-    {{ form_end(userForm) }}
-
+    {{ form_end(userForm) }}</div>
 
     <div id="avatarPreview">
     </div>
