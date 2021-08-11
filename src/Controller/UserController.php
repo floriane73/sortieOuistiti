@@ -90,9 +90,9 @@ class   UserController extends AbstractController
     {
         $result = $userRepository->find($id);
 
-     return $this->render("user/afficher.html.twig", [
-        'profil' => $result
-     ]);
+         return $this->render("user/afficher.html.twig", [
+            'profil' => $result
+         ]);
     }
 
     /**
