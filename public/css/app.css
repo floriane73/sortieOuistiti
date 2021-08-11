@@ -121,7 +121,8 @@ select{
     margin-bottom: 1rem;
     padding:5px;
     box-sizing: border-box;
-
+    background-color: #ecdbd7;
+    border: 1px solid rgba(175, 123, 123, 0.58);
 }
 
 table{
