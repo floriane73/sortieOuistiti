@@ -29,8 +29,8 @@ class RegistrationController extends AbstractController
     {
         $user = new User();
         $user->setRoles(['ROLE_USER']);
-        $user->setAdministrateur('false');
-        $user->setActif('false');
+        $user->setAdministrateur(false);
+        $user->setActif(true);
 
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
@@ -49,12 +49,8 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
             // do anything else you need here, like send an email
 
-            return $guardHandler->authenticateUserAndHandleSuccess(
-                $user,
-                $request,
-                $authenticator,
-                'main' // firewall name in security.yaml
-            );
+            $this->addFlash('succes', "L'utilisateur a été créé");
+            return $this->redirectToRoute('main_index');
         }
 
         return $this->render('registration/register.html.twig', [
