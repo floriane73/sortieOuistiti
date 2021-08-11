@@ -35,6 +35,10 @@ security:
                 # following line to always enable it.
                 #always_remember_me: true
 
+    role_hierarchy:
+        ROLE_USER: ROLE_DESACTIVE
+        ROLE_ADMIN: ROLE_USER
+
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
 
@@ -44,8 +48,16 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-         # { path: ^/lieu, roles: ROLE_ADMIN }
-         # { path: ^/register, roles: ROLE_ADMIN }
-         # { path: ^/user, roles: ROLE_USER }
-         # { path: ^/sortie, roles: ROLE_USER }
-         # { path: ^/sortie, roles: ROLE_DESACTIVE }
+        - { path: ^/lieu, roles: ROLE_ADMIN }
+        - { path: ^/register, roles: ROLE_ADMIN }
+        - { path: ^/registerListe, roles: ROLE_ADMIN }
+        - { path: ^/user/supprimerUtilisateurs, roles: ROLE_ADMIN }
+
+        - { path: ^/sortie/details/*, roles: ROLE_USER }
+
+        - { path: ^/home, roles: [ROLE_DESACTIVE] }
+        - { path: ^/user, roles: [ROLE_DESACTIVE] }
+
+
+
+

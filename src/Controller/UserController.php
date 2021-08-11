@@ -148,10 +148,10 @@ class   UserController extends AbstractController
             $description = $sortie->getDescription();
             $sortie->setDescription("SORTIE ANNULEE - ".$description);
             $sortie->setEtatSortie($sortieAnnulee);
-           // $user->setRoles(["ROLE_DESACTIVE"]);
         }
 
         $user->setActif(false);
+        $user->setRoles(["ROLE_DESACTIVE"]);
         $entityManager->persist($user);
         $entityManager->flush();
 
