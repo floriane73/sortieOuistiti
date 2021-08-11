@@ -2,7 +2,16 @@
 
 {% block body %}
     <h1>Gérer les lieux</h1>
-    <button><a href="{{ path('lieu_ajouter') }}">Ajouter un lieu</a></button>
+
+    <h2>Ajouter un lieu</h2>
+
+    <div>
+    {{ form_start(lieuForm) }}
+    {{ form_widget(lieuForm) }}
+    <button>Ajouter</button>
+    {{ form_end(lieuForm) }}
+    </div>
+
     <table>
         <tr>
             <th>Nom</th>
