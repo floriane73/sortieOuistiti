@@ -86,7 +86,9 @@ class SortieRepository extends ServiceEntityRepository
             ->leftJoin('sortie.participantsInscrits', 'inscrits')
             ->innerJoin('sortie.etatSortie', 'etat', Join::WITH, 'etat = sortie.etatSortie')
             ->innerJoin('sortie.lieu', 'lieu', Join::WITH, 'lieu = sortie.lieu')
-            ->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville = lieu.ville');
+            ->innerJoin('lieu.ville', 'ville', Join::WITH, 'ville = lieu.ville')
+            ->andWhere("CURRENT_DATE()<= DATE_ADD(sortie.dateHeureDebut,30, 'day')");
+
 
         if (!empty($filtres->q)) {
             $queryBuilder->andWhere('sortie.nom LIKE :words')
