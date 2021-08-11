@@ -10,9 +10,10 @@ body {
     min-height: 100vh;
 }
 .container {
-    max-width: 2500px;
+    min-width: 1500px;
     margin: auto;
     padding: 5px;
+    box-shadow: 0 0 1rem #8d8a8a;
 }
 body > .container {
     display: flex;
@@ -22,11 +23,10 @@ body > .container {
 header{
     background-color: rgba(0, 0, 0, 0.8);
     color: #DDDDDD;
-    border-radius: 10px;
-    padding: 10px;
+    padding: 20px;
 }
 nav{
-    text-align: center;
+    text-align: left;
 }
 nav ul{
     list-style: none;
