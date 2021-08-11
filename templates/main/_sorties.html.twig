@@ -30,9 +30,9 @@
 
         <td>
             {% if sortie.participantOrganisateur.id is same as(app.user.id) %}
-                <a class="clickable" href="{{ path('sortie_modifier', {'id': sortie.id}) }}">Modifier</a>
+                <button><a class="clickable" href="{{ path('sortie_modifier', {'id': sortie.id}) }}">Modifier</a></button>
             {% else %}
-                <a class="clickable" href="{{ path('sortie_details', {'id': sortie.id}) }}">Afficher</a>
+                <button><a class="clickable" href="{{ path('sortie_details', {'id': sortie.id}) }}">Afficher</a></button>
             {% endif %}
         </td>
     </tr>
