@@ -77,7 +77,6 @@ class SortieRepository extends ServiceEntityRepository
             ->select('sortie')
             ->where('etat.id != 5');
 
-
         return $nbModifs;
     }
 
