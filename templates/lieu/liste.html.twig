@@ -1,29 +1,35 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <h1>Gérer les lieux</h1>
+    <div class="js-lieu">
+        <h1>Gérer les lieux</h1>
 
-    <h2>Ajouter un lieu</h2>
+        <h2>Ajouter un lieu</h2>
 
-    <div>
-    {{ form_start(lieuForm) }}
-    {{ form_widget(lieuForm) }}
-    <button>Ajouter</button>
-    {{ form_end(lieuForm) }}
-    </div>
+        <div class="js-lieu-form">
+        {{ form_start(lieuForm) }}
+        {{ form_widget(lieuForm) }}
+        <button type="submit">Ajouter</button>
+        {{ form_end(lieuForm) }}
+        </div>
 
-    <table>
-        <tr>
-            <th>Nom</th>
-            <th>Adresse</th>
-        </tr>
-        {% for lieu in listeLieux %}
+        <table class="js-lieu-content">
             <tr>
-                <td>{{ lieu.nom }}</td>
-                <td>{{ lieu.numeroEtRue }}</td>
+                <th>Nom</th>
+                <th>Adresse</th>
+                <th>Ville</th>
+                <th>Code postal</th>
             </tr>
-        {%  endfor %}
-    </table>
+            {% for lieu in listeLieux %}
+                <tr>
+                    <td>{{ lieu.nom }}</td>
+                    <td>{{ lieu.numeroEtRue }}</td>
+                    <td>{{ lieu.ville.nom }}</td>
+                    <td>{{ lieu.ville.codePostal }}</td>
+                </tr>
+            {%  endfor %}
+        </table>
+    </div>
 {% endblock %}
 
 {% block title %}

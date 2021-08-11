@@ -49,20 +49,13 @@
                     //verification si bien une image
                     if(file['type'].split('/')[0] == "image"){
                         elementAvatarPreview.innerHTML = "<img src='"+ URL.createObjectURL(file) +"' alt='avatar' width='200' height=''>";
-                     } else {
-                        this.files[0].name = "fdfsf";
-                        this.form.reset();
-                    }
+                     }
                 }
             })
         })();
     </script>
 
 {% endblock %}
-
-{% block javascripts %}
-{% endblock %}
-
 
 {% block title %}
     {{ parent() }} | Profil : {{ app.user.pseudo }}
