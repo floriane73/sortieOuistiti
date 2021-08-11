@@ -73,7 +73,7 @@ class AppFixtures extends Fixture
 
     private function addEtat()
     {
-        $etats = ["Ouverte", "En cours", "Passée", "Annulée"];
+        $etats = ["Ouverte", "Fermée", "En cours", "Passée", "Annulée"];
 
         for($i=0; $i<count($etats); $i++){
             $etat = new EtatSortie();
@@ -137,8 +137,9 @@ class AppFixtures extends Fixture
 
         //$etats = $this->manager->getRepository(EtatSortie::class)->findAll();
         $etatOuvert = $this->manager->find(EtatSortie::class,1);
-        $etatEnCours = $this->manager->find(EtatSortie::class,2);
-        $etatFerme = $this->manager->find(EtatSortie::class,3);
+        $etatFerme = $this->manager->find(EtatSortie::class,2);
+        $etatEnCours = $this->manager->find(EtatSortie::class,3);
+        $etatFini = $this->manager->find(EtatSortie::class,4);
 
         $campus = $this->manager->getRepository(Campus::class)->findAll();
         $listeDuree = [null,0,10,20,30,60,90,120,180,210,240,270,300,330,360,390,420];
@@ -183,11 +184,14 @@ class AppFixtures extends Fixture
             $timestampNow = $dateNow->getTimestamp();
 
             switch ($timestampNow) {
-                case ($timestampNow < $timestampDebutSortie && $timestampNow <= $timestampLimiteInscription) :
+                case ($timestampNow < $timestampDebutSortie && $timestampNow < $timestampLimiteInscription) :
                     $etatSortie = $etatOuvert;
                     break;
-                case ($timestampNow > $timestampFinSortie) :
+                case ($timestampNow < $timestampDebutSortie && $timestampNow >= $timestampLimiteInscription) :
                     $etatSortie = $etatFerme;
+                    break;
+                case ($timestampNow > $timestampFinSortie) :
+                    $etatSortie = $etatFini;
                     break;
                 case ($timestampNow > $timestampDebutSortie && $timestampNow < $timestampFinSortie) :
                     $etatSortie = $etatEnCours;

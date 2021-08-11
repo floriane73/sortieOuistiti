@@ -63,7 +63,23 @@ class SortieRepository extends ServiceEntityRepository
     }
 
     public function updateAllEtats() {
-        $queryBuilder = $this->createQueryBuilder('sortie');
+        $nbModifs = 0;
+        /*          -- états --
+         * 1 - Ouvert ( today < cloture )
+         * 2 - Fermée ( cloture <= today < début )
+         * 3 - En cours ( début <= today < début+durée )
+         * 4 - Passée ( début+durée <= today )
+         * 5 - Annulée
+         */
+        $today = new \DateTime();
+        $sortiesValides = $this->createQueryBuilder('sortie')
+            ->select('sortie')
+            ->where('etat.id != 5');
+
+
+
+
+        return $nbModifs;
     }
 
     public function getSortiesByFilters(FiltresData $filtres, $userId)
@@ -110,7 +126,7 @@ class SortieRepository extends ServiceEntityRepository
         }
         if (!empty($filtres->isSortiePassee)) {
             $queryBuilder->andWhere('etat.id = :etat')
-                ->setParameter('etat', 3);
+                ->setParameter('etat', 4);
         }
         $queryBuilder->addOrderBy('sortie.dateLimiteInscription', 'ASC');
 
