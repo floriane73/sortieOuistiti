@@ -26,7 +26,7 @@ export default class Filtre {
      */
     bindEvents() {
         const aListener = e => {
-            if (e.target.tagName === 'A') {
+            if (e.target.tagName === 'A' && e.target.className !== 'clickable') {
                 e.preventDefault()
                 this.loadUrl(e.target.getAttribute('href'))
             }

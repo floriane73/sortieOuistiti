@@ -1,11 +1,11 @@
-    <tr class="js-filter-sorting">
-        {% include 'main/_sorting.html.twig' with {listeSorties: listeSorties} %}
-        <th>Inscrits</th>
-        <th>Etat</th>
-        <th>Inscrit</th>
-        <th>Organisateur</th>
-        <th>actions</th>
-    </tr>
+<tr class="js-filter-sorting">
+    {% include 'main/_sorting.html.twig' with {listeSorties: listeSorties} %}
+    <th>Inscrits</th>
+    <th>Etat</th>
+    <th>Inscrit</th>
+    <th>Organisateur</th>
+    <th>actions</th>
+</tr>
 {% for sortie in listeSorties %}
     <tr>
         <td>{{ sortie.nom }}</td>
@@ -19,14 +19,20 @@
             {% endif %}
         </td>
         <td>{{ sortie.etatSortie.libelle }}</td>
-        <td></td>
+        <td>
+            {% if app.user in sortie.participantsInscrits %}
+                ✔️
+            {% else %}
+                ❌
+            {% endif %}
+        </td>
         <td>{{ sortie.participantOrganisateur.nom }}</td>
 
         <td>
             {% if sortie.participantOrganisateur.id is same as(app.user.id) %}
-                <a href="{{ path('sortie_modifier', {'id': sortie.id}) }}">Modifier</a>
+                <a class="clickable" href="{{ path('sortie_modifier', {'id': sortie.id}) }}">Modifier</a>
             {% else %}
-                <a href="{{ path('sortie_details', {'id': sortie.id}) }}">Afficher</a>
+                <a class="clickable" href="{{ path('sortie_details', {'id': sortie.id}) }}">Afficher</a>
             {% endif %}
         </td>
     </tr>

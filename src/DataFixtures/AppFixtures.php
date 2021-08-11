@@ -73,7 +73,7 @@ class AppFixtures extends Fixture
 
     private function addEtat()
     {
-        $etats = ["Ouverte", "Activité en cours", "Passée", "Annulée"];
+        $etats = ["Ouverte", "En cours", "Passée", "Annulée"];
 
         for($i=0; $i<count($etats); $i++){
             $etat = new EtatSortie();

@@ -31,15 +31,12 @@
             </tr>
         {% endfor %}
     </table>
-    remy13@orange.fr
 
-    {% set inscritOK = false %}
+    {% set isInscrit = false %}
     {% for participant in sortieAffichee.participantsInscrits %}
-
         {% if participant.id == app.user.id %}
-            {% set inscritOK = true %}
+            {% set isInscrit = true %}
         {% endif %}
-
     {% endfor %}
 
 
@@ -53,12 +50,12 @@
             {% endif %}
             </div>
         {% endif %}
-        {% if app.user.id != sortieAffichee.participantOrganisateur.id and inscritOK == true %}
+        {% if app.user.id != sortieAffichee.participantOrganisateur.id and isInscrit == true %}
             <div>
                 <a href="{{ path('sortie_details_sedesister', {"id": sortieAffichee.id}) }}"><button>Se désister</button></a>
             </div>
         {% endif %}
-        {% if app.user.id != sortieAffichee.participantOrganisateur.id and inscritOK == false and app.user.administrateur == null  %}
+        {% if app.user.id != sortieAffichee.participantOrganisateur.id and isInscrit == false %}
             <div>
                 <a href="{{ path('sortie_details_inscription', {"id": sortieAffichee.id}) }}"><button>S'inscrire</button></a>
             </div>
