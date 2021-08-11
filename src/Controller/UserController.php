@@ -10,6 +10,7 @@ use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -84,7 +85,7 @@ class   UserController extends AbstractController
     }
 
     /**
-     * @Route("/afficher/{id}", name="afficher_profil")
+     * @Route("/details/{id}", name="afficher_profil")
      */
     public function afficher(int $id, UserRepository $userRepository)
     {

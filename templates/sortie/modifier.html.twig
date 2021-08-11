@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Créer une sortie | {{ parent() }}{% endblock %}
+{% block title %}
+    Modifier la sortie | {{ parent() }}
+{% endblock %}
 
 {% block body %}
-    <h2>Création d'une sortie</h2>
+    <h2>Modification de la sortie</h2>
     {{ form_start(sortieForm) }}
     {{ form_row(sortieForm.nom) }}
     {{ form_row(sortieForm.dateHeureDebut) }}
@@ -13,8 +15,6 @@
     {{ form_row(sortieForm.description) }}
     {{ form_row(sortieForm.lieu) }}
     <div>Campus : {{ sortie.campus.nom }}</div>
-
     <button>Valider</button>
     {{ form_end(sortieForm) }}
-
 {% endblock %}
