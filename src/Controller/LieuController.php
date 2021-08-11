@@ -17,21 +17,10 @@ class LieuController extends AbstractController
     /**
      * @Route("/lieu", name="lieu")
      */
-    public function liste(LieuRepository $lieuRepository): Response
+    public function liste(LieuRepository $lieuRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
         $lieux =$lieuRepository->findAll();
-       // dd($lieux);
 
-        return $this->render('lieu/liste.html.twig', [
-            'listeLieux' => $lieux
-        ]);
-    }
-
-    /**
-     * @Route("/lieu/ajouter", name="lieu_ajouter")*
-     */
-    public function ajouter(Request $request, EntityManagerInterface $entityManager)
-    {
         $lieu = new Lieu();
         $lieuForm = $this->createForm(LieuType::class, $lieu);
         $lieuForm->handleRequest($request);
@@ -44,8 +33,11 @@ class LieuController extends AbstractController
             return  $this->redirectToRoute('lieu');
         }
 
-        return $this->render('lieu/ajouter.html.twig', [
+        return $this->render('lieu/liste.html.twig', [
+            'listeLieux' => $lieux,
             'lieuForm' => $lieuForm->createView()
         ]);
     }
+
+
 }
