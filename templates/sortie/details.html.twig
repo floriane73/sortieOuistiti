@@ -18,16 +18,16 @@
     <div>Latitude : {{ sortieAffichee.lieu.latitude }}</div>
     <div>Longitude : {{ sortieAffichee.lieu.longitude }}</div>
 
-    Organisateur : id : {{ sortieAffichee.participantOrganisateur.id }} : {{ sortieAffichee.participantOrganisateur.nom }} {{ sortieAffichee.participantOrganisateur.prenom }}
+    Organisateur : {{ sortieAffichee.participantOrganisateur.nom }} {{ sortieAffichee.participantOrganisateur.prenom }}
     <table>
         <th>Pseudo</th>
         <th>Nom</th>
-        <th>Email</th>
+        <th>Action</th>
         {% for participant in sortieAffichee.participantsInscrits %}
             <tr>
                 <td>{{ participant.pseudo }}</td>
                 <td>{{ participant.prenom }} {{ participant.nom|upper }}</td>
-                <td>{{ participant.email }} </td>
+                <td><button><a href="{{ path('user_afficher_profil', {'id': participant.id}) }}">Afficher le profil</a></button> </td>
             </tr>
         {% endfor %}
     </table>
