@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Gérer les lieux</h1>
+    <button><a href="{{ path('lieu_ajouter') }}">Ajouter un lieu</a></button>
+    <table>
+        <tr>
+            <th>Nom</th>
+            <th>Adresse</th>
+        </tr>
+        {% for lieu in listeLieux %}
+            <tr>
+                <td>{{ lieu.nom }}</td>
+                <td>{{ lieu.numeroEtRue }}</td>
+            </tr>
+        {%  endfor %}
+    </table>
+{% endblock %}
+
+{% block title %}
+    {{ parent() }} | Liste des lieux
+{% endblock %}
+

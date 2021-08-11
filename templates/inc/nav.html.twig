@@ -6,8 +6,8 @@
 
             <li class="col-1 col-s-12"><a href="{{ path('main_index') }}" title="Home">Accueil</a></li>
             <li class="col-1 col-s-12"><a href="{{ path('user_modifier_profil') }}" title="Afficher mon profil" {% if page == "user_modifier_profil" %} class = "active" {% endif %}>Mon profil</a></li>
+            <li class="col-2 col-s-12"><a href="{{ path('lieu') }}" title="Liste de lieu" {% if page == "lieu" %} class = "active" {% endif %}>Liste de lieu</a></li>
             <li class="col-2 col-s-12"><a href="{{ path('app_logout') }}" title="Logout" {% if page == "app_login" %} class = "active" {% endif %}>Se déconnecter ({{ app.user.pseudo }})</a></li>
-
             {% if is_granted("ROLE_ADMIN") %}
                 <li class="col-2 col-s-12"><a href="{{ path('app_register') }}" title="Créer un nouveau compte" {% if page == "app_register" %} class = "active" {% endif %}>Enregistrer un étudiant</a></li>
                 <li class="col-2 col-s-12"><a href="{{ path('app_registerListe') }}" title="Enregistrer une liste d'étudiants" {% if page == "app_registerListe" %} class = "active" {% endif %}>Enregistrer une liste d'étudiants</a></li>
