@@ -111,7 +111,7 @@ label {
     margin-right: 20px;
     float: left;
     display: block;
-    width: 90px;
+    width: 120px;
 
 }
 
@@ -141,6 +141,9 @@ th, td{
 th{
     background-color: rgb(68, 61, 61);
     color: #FFFFFF;
+}
+th>a:hover{
+    color: rgb(222, 160, 132);
 }
 tr:hover{
     background-color: rgba(222, 160, 132, 0.5);
