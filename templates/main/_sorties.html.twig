@@ -1,34 +1,34 @@
 <tr class="js-filter-sorting">
     {% include 'main/_sorting.html.twig' with {listeSorties: listeSorties} %}
-    <th>Inscrits</th>
-    <th>Etat</th>
-    <th>Inscrit</th>
-    <th>Organisateur</th>
-    <th>actions</th>
+    <th class="colonneMasquee">Inscrits</th>
+    <th class="colonneMasquee">Etat</th>
+    <th class="colonneMasquee">Inscrit</th>
+    <th class="colonneMasquee">Organisateur</th>
+    <th class="colonneMasquee">actions</th>
 </tr>
 {% for sortie in listeSorties %}
     <tr>
         <td>{{ sortie.nom }}</td>
         <td>{{ sortie.dateHeureDebut | format_datetime(pattern='d MMM Y à h:m', locale='fr') }}</td>
-        <td>{{ sortie.dateLimiteInscription | date('d/m/Y', 'Europe/Paris') }}</td>
-        <td>
+        <td class="colonneMasquee">{{ sortie.dateLimiteInscription | date('d/m/Y', 'Europe/Paris') }}</td>
+        <td class="colonneMasquee">
             {% if sortie.nbInscriptionsMax is not null %}
                 {{ sortie.participantsInscrits.count }} / {{ sortie.nbInscriptionsMax }}
             {% else %}
                 {{ sortie.participantsInscrits.count }}
             {% endif %}
         </td>
-        <td>{{ sortie.etatSortie.libelle }}</td>
-        <td>
+        <td class="colonneMasquee">{{ sortie.etatSortie.libelle }}</td>
+        <td class="colonneMasquee">
             {% if app.user in sortie.participantsInscrits %}
                 ✔️
             {% else %}
                 ❌
             {% endif %}
         </td>
-        <td><a class="clickable" href="{{ path('user_afficher_profil', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.pseudo }}</a></td>
+        <td class="colonneMasquee"><a class="clickable" href="{{ path('user_afficher_profil', {'id': sortie.participantOrganisateur.id}) }}">{{ sortie.participantOrganisateur.pseudo }}</a></td>
 
-        <td>
+        <td class="colonneMasquee">
             {% if sortie.participantOrganisateur.id is same as(app.user.id) %}
                 <button><a class="clickable" href="{{ path('sortie_modifier', {'id': sortie.id}) }}">Modifier</a></button>
             {% else %}
