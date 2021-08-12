@@ -29,13 +29,15 @@
         {{ form_row(userForm.campus)}}
 
         {{ form_row(userForm.avatarPath, { value: app.user.avatarPath}) }}
-
-    <button type="submit">Enregistrer</button>
-    <button type="reset">Annuler</button>
-    {{ form_end(userForm) }}</div>
-
     <div id="avatarPreview">
     </div>
+    <button type="submit">Enregistrer</button>
+    <button type="reset">Annuler</button>
+    {{ form_end(userForm) }}
+
+    </div>
+
+
 
     <script>
         window.onload =(function(){
