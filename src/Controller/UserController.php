@@ -5,16 +5,21 @@ namespace App\Controller;
 use App\Entity\EtatSortie;
 use App\Entity\User;
 use App\Form\AnnulerSortieType;
+use App\Form\ChangePasswordFormType;
+use App\Form\UpdatePasswordFormType;
 use App\Form\UserType;
 use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route ("/user", name="user_")
@@ -36,7 +41,7 @@ class   UserController extends AbstractController
     /**
      * @Route("/modifier", name="modifier_profil")
      */
-    public function profil(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository)
+    public function profil(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordEncoderInterface $encoder)
     {
         //récuperation de l'utilisateur
         $user = $this->getUser();
@@ -45,18 +50,9 @@ class   UserController extends AbstractController
         $userForm = $this->createForm(UserType::class, $user);
         $userForm->handleRequest($request);
 
+
         if($userForm->isSubmitted() && $userForm->isValid() ){
             $user = $userForm->getData();
-
-            //Hash du mot de passe
-            /*$plainPassword = $userForm['password']->getData();
-            dump($plainPassword);
-            if ($plainPassword !== null) {
-                $encoded = $encoder->encodePassword($user, $plainPassword);
-                $user->setPassword($encoded);
-            } else {
-                $user->setPassword($passwordPrev);
-            }*/
 
             //Récupératon de la data
             $file = $userForm['avatarPath']->getData();
@@ -86,6 +82,41 @@ class   UserController extends AbstractController
             'userForm' => $userForm->createView()
         ]);
     }
+
+    /**
+     * @Route("/modifier/Password", name="modifier_password")
+     */
+    public function modifierPassword(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository, UserPasswordEncoderInterface $encoder)
+    {
+        $user = $this->getUser();
+        $formPassword = $this->createForm(UpdatePasswordFormType::class);
+
+        $formPassword->handleRequest($request);
+
+        if($formPassword->isSubmitted() && $formPassword->isValid() ) {
+
+          //Hash du mot de passe
+          $plainPassword = $formPassword['password']->getData();
+          dump($plainPassword);
+          if ($plainPassword !== null) {
+              $encoded = $encoder->encodePassword($user, $plainPassword);
+              $user->setPassword($encoded);
+          } else {
+              //$user->setPassword($passwordPrev);
+          }
+
+            $entityManager->persist($user);
+            $entityManager->flush();
+
+            $this->addFlash('success', "Le mot de passe a été modifié!");
+            return $this->redirectToRoute('user_modifier_profil'); //Modifier la route
+
+        }
+        return $this->render("reset_password/updatePassword.html.twig",[
+            "formPassword" => $formPassword->createView()
+        ]);
+    }
+
 
     /**
      * @Route("/details/{id}", name="afficher_profil")

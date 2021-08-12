@@ -19,11 +19,13 @@
 
         {{ form_row(userForm.campus)}}
 
+
         {{ form_row(userForm.avatarPath, { value: app.user.avatarPath}) }}
     <div id="avatarPreview">
     </div>
     <button type="submit">Enregistrer</button>
     <button type="reset">Annuler</button>
+    <button><a href="{{ path('user_modifier_password') }}">Changer le mot de passe</a></button>
     {{ form_end(userForm) }}
 
     </div>
