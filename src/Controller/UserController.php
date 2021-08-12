@@ -9,6 +9,7 @@ use App\Form\UserType;
 use App\Repository\SortieRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
@@ -125,12 +126,13 @@ class   UserController extends AbstractController
     /**
      * @Route("/supprimerUtilisateurs", name="supprimer_utilisateurs")
      */
-    public function supprimerUtilisateurs(EntityManagerInterface $entityManager, Request $request)
+    public function supprimerUtilisateurs(EntityManagerInterface $entityManager, Request $request, PaginatorInterface $paginator)
     {
         $allUsers = $entityManager->getRepository(User::class)->findAll();
+        $listeUsers = $paginator->paginate($allUsers, $request->get("page", 1), 10);
 
         return $this->render("/user/supprimerUtilisateurs.html.twig",[
-           "allUsers" => $allUsers
+           "allUsers" => $listeUsers
         ]);
     }
 
