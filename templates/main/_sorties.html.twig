@@ -14,8 +14,8 @@
         <td class="colonneMasquee">
             {% if sortie.nbInscriptionsMax is not null %}
                 {{ sortie.participantsInscrits.count }} / {{ sortie.nbInscriptionsMax }}
-            {% else %}
-                {{ sortie.participantsInscrits.count }}
+                {% else %}
+                 {{ sortie.participantsInscrits.count }}
             {% endif %}
         </td>
         <td class="colonneMasquee">{{ sortie.etatSortie.libelle }}</td>
