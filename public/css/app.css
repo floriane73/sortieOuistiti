@@ -157,9 +157,12 @@ tr:hover{
 }
 .pagination{
     font-weight: bold;
-    letter-spacing: 10px;
     margin-bottom: 2rem;
     text-align: center;
+    letter-spacing: 5px;
+}
+.page, .next, .last, .prev, .first{
+    color:rgb(222, 160, 132);
 }
 
 button{
