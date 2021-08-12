@@ -8,11 +8,19 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation\ExclusionPolicy;
 use JMS\Serializer\Annotation\Expose;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Mapping\UniqueConstraint;
 
 /**
  * @ORM\Entity(repositoryClass=VilleRepository::class)
  * @ExclusionPolicy ("all")
+ * @ORM\Table(name="ville",
+ *    uniqueConstraints={
+ *        @UniqueConstraint(name="compositeVille",
+ *            columns={"code_Postal", "nom"})
+ *    })
+ * @UniqueEntity(fields={"nom", "codePostal"}, message="Cette ville avec ce code postal existe déjà")
  */
 class Ville
 {

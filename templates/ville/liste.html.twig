@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+        <h1>Gérer les villes</h1>
+
+        <h2>Ajouter une ville</h2>
+
+        <div>
+            {{ form_start(villeForm) }}
+            {{ form_widget(villeForm) }}
+            <button type="submit">Ajouter</button>
+            {{ form_end(villeForm) }}
+        </div>
+
+        <table>
+            <tr>
+                <th>Nom</th>
+                <th>Code postal</th>
+            </tr>
+            {% for ville in listeVilles %}
+                <tr>
+                    <td>{{ ville.nom }}</td>
+                    <td>{{ ville.codePostal }}</td>
+                </tr>
+            {%  endfor %}
+        </table>
+        {{ knp_pagination_render(listeVilles) }}
+    </div>
+
+{% endblock %}
+
+{% block title %}
+    {{ parent() }} | Liste des villes
+{% endblock %}
