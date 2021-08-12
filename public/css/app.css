@@ -125,6 +125,9 @@ select{
     border: 1px solid rgba(175, 123, 123, 0.58);
     letter-spacing: 1px;
 }
+option:checked {
+    background-color: rgba(222, 160, 132, 0.5);
+}
 
 table{
     min-width: 1200px;
