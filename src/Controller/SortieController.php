@@ -64,7 +64,7 @@ class SortieController extends AbstractController
                 break;
             case 3:
                 if ($today > $dateFin) {
-                    $sortieAffichee->setEtatSortie($etatFerme);
+                    $sortieAffichee->setEtatSortie($etatPasse);
                 }
                 $entityManager->persist($sortieAffichee);
                 $entityManager->flush();
