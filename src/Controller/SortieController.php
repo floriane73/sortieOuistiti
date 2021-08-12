@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Form\AnnulerSortieType;
 use App\Entity\User;
 use App\Form\SortieType;
+use App\Repository\EtatSortieRepository;
 use App\Repository\SortieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,22 +21,54 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class SortieController extends AbstractController
 {
+        #        -- états --
+        # 1 - ouverte ( today < cloture )
+        # 2 - fermee ( cloture <= today < début )
+        # 3 - encours ( début <= today < début+durée )
+        # 4 - passee ( début+durée <= today )
+        # 5 - annulee
 
     /**
      * @Route ("/details/{id}", name="details")
      */
     public function details(
         $id,
-        SortieRepository $sortieRepository
+        SortieRepository $sortieRepository, EntityManagerInterface $entityManager
     )
     {
-        //$this->denyAccessUnlessGranted('ROLE_USER');
-
-        $connectedUser = $this->getUser();
-
         $sortieAffichee = $sortieRepository->getSortieById($id);
+        $idEtat = $sortieAffichee->getEtatSortie()->getId();
+        $dateLimite = $sortieAffichee->getDateLimiteInscription();
+        $dateDebut = $sortieAffichee->getDateHeureDebut();
+        $dateFin = date_add($dateDebut, new \DateInterval('P1D'));
+        $etatFerme = $entityManager->find(EtatSortie::class, 2);
+        $etatEnCours = $entityManager->find(EtatSortie::class, 3);
+        $etatPasse = $entityManager->find(EtatSortie::class, 4);
 
-        //dd($sortieAffichee);
+        $today = new \DateTime();
+
+        switch ($idEtat) {
+            case 1:
+                if ($today > $dateLimite) {
+                    $sortieAffichee->setEtatSortie($etatFerme);
+                }
+                $entityManager->persist($sortieAffichee);
+                $entityManager->flush();
+                break;
+            case 2:
+                if ($today > $dateDebut) {
+                    $sortieAffichee->setEtatSortie($etatEnCours);
+                }
+                $entityManager->persist($sortieAffichee);
+                $entityManager->flush();
+                break;
+            case 3:
+                if ($today > $dateFin) {
+                    $sortieAffichee->setEtatSortie($etatPasse);
+                }
+                $entityManager->persist($sortieAffichee);
+                $entityManager->flush();
+        }
 
         return $this->render('sortie/details.html.twig', [
             "sortieAffichee" => $sortieAffichee
@@ -62,16 +95,16 @@ class SortieController extends AbstractController
         $sortie->setParticipantOrganisateur($connectedUser);
         $sortie->setCampus($campusUser);
 
-        dump($sortie);
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
-                $entityManager->persist($sortie);
-                $entityManager->flush();
 
-                $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
-                $this->addFlash('success', $msg);
-                return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            $msg = 'Sortie ' . $sortie->getNom() . ' ajoutée !';
+            $this->addFlash('success', $msg);
+            return $this->redirectToRoute('sortie_details', ['id' => $sortie->getId()]);
         }
 
         return $this->render('sortie/ajout.html.twig', [
@@ -98,7 +131,7 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('main_index');
         }
 
-        $sortieForm = $this->createForm(SortieType::class,$sortie);
+        $sortieForm = $this->createForm(SortieType::class, $sortie);
         $sortieForm->handleRequest($request);
 
         if ($sortieForm->isSubmitted() && $sortieForm->isValid()) {
@@ -108,7 +141,7 @@ class SortieController extends AbstractController
             $entityManager->flush();
 
             $this->addFlash('success', "Les modifications ont été correctement effectuées !");
-            return $this->redirectToRoute('sortie_modifier', ['id'=> $id]);
+            return $this->redirectToRoute('sortie_modifier', ['id' => $id]);
         }
 
         return $this->render('sortie/modifier.html.twig', [
