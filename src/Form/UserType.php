@@ -33,14 +33,14 @@ class UserType extends AbstractType
             ->add('email', EmailType::class, [
                 'label' => 'Email :'
            ])
-            ->add('password', RepeatedType::class, [
+            /*->add('password', RepeatedType::class, [
                 'type' => PasswordType::class,
                 'invalid_message' => 'The password fields must match.',
                 'options' => ['attr' => ['class' => 'password-field']],
                 'required' => false,
-                'first_options'  => ['label' => 'Mot de passe:'],
+                'first_options'  => ['label' => 'Changer mot de passe:'],
                 'second_options' => ['label' => 'Confirmation :']
-            ])
+            ])*/
             ->add('campus', EntityType::class, [
                 'label' => 'Campus :',
                 'class' => Campus::class,

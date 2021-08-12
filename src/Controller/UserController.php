@@ -15,7 +15,6 @@ use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route ("/user", name="user_")
@@ -37,26 +36,29 @@ class   UserController extends AbstractController
     /**
      * @Route("/modifier", name="modifier_profil")
      */
-    public function profil(Request $request, EntityManagerInterface $entityManager, UserPasswordEncoderInterface $encoder, UserRepository $userRepository)
+    public function profil(Request $request, EntityManagerInterface $entityManager, UserRepository $userRepository)
     {
         //récuperation de l'utilisateur
         $user = $this->getUser();
         $avatarPath = $user->getAvatarPath();
 
-        $userForm = $this->createForm(UserType::class,$user);
+        $userForm = $this->createForm(UserType::class, $user);
         $userForm->handleRequest($request);
 
         if($userForm->isSubmitted() && $userForm->isValid() ){
+            $user = $userForm->getData();
+
             //Hash du mot de passe
-            //$user = new User();
-            $plainPassword = $userForm['password']->getData();
-            $encoded = $encoder->encodePassword($user, $plainPassword);
+            /*$plainPassword = $userForm['password']->getData();
+            dump($plainPassword);
+            if ($plainPassword !== null) {
+                $encoded = $encoder->encodePassword($user, $plainPassword);
+                $user->setPassword($encoded);
+            } else {
+                $user->setPassword($passwordPrev);
+            }*/
 
             //Récupératon de la data
-            $user = $userForm->getData();
-            $user->setPassword($encoded);
-
-
             $file = $userForm['avatarPath']->getData();
             if($file !== null){
                 if($file){
