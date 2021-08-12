@@ -21,7 +21,7 @@
 
         {% if app.user %}
             {% if app.user.id == app.user.administrateur%}
-                <button><a href="">Désactiver</a></button>
+                <button><a href="{{ path('user_desactiver_utilisateur', {"id": profil.id}) }}">Désactiver</a></button>
                 <button><a href="{{ path('user_supprimer_profil', {"id": profil.id}) }}">Supprimer</a></button>
             {% endif %}
         {% endif %}
