@@ -23,8 +23,7 @@ security:
                     - App\Security\AppAuthenticator
             logout:
                 path: app_logout
-                # where to redirect after logout
-                # target: app_any_route
+                target: app_login
 
             remember_me:
                 secret: '%kernel.secret%'
@@ -39,12 +38,6 @@ security:
         ROLE_USER: ROLE_DESACTIVE
         ROLE_ADMIN: ROLE_USER
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#firewalls-authentication
-
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
-
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
@@ -57,3 +50,8 @@ security:
         - { path: ^/sortie/details/*, roles: ROLE_USER }
         - { path: ^/sortie/ajout, roles: ROLE_USER }
         - { path: ^/user/modifier, roles: ROLE_USER }
+        - { path: ^/logout, roles: ROLE_USER }
+
+        - { path: ^/user*, roles: ROLE_DESACTIVE }
+
+        - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

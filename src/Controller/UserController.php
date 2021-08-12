@@ -27,10 +27,7 @@ class   UserController extends AbstractController
      */
     public function index(): Response
     {
-        return $this->render('user/index.html.twig', [
-            'controller_name' => 'UserController',
-
-        ]);
+        return $this->redirectToRoute('user_modifier_profil');
     }
 
     /**
@@ -45,7 +42,7 @@ class   UserController extends AbstractController
         $userForm = $this->createForm(UserType::class, $user);
         $userForm->handleRequest($request);
 
-        if($userForm->isSubmitted() && $userForm->isValid() ){
+        if ($userForm->isSubmitted() && $userForm->isValid()) {
             $user = $userForm->getData();
 
             //Hash du mot de passe
@@ -60,8 +57,8 @@ class   UserController extends AbstractController
 
             //Récupératon de la data
             $file = $userForm['avatarPath']->getData();
-            if($file !== null){
-                if($file){
+            if ($file !== null) {
+                if ($file) {
                     //renomme aleatoirement l'image
                     $filename = bin2hex(random_bytes(6)).'.'.$file->guessExtension();
                     try {
@@ -71,7 +68,7 @@ class   UserController extends AbstractController
                     }
                     $user->setAvatarPath($filename);
                 }
-            }else{
+            } else {
                 $user->setAvatarPath($avatarPath);
             }
 
@@ -93,7 +90,6 @@ class   UserController extends AbstractController
     public function afficher(int $id, UserRepository $userRepository)
     {
         $result = $userRepository->find($id);
-
          return $this->render("user/afficher.html.twig", [
             'profil' => $result
          ]);
@@ -105,24 +101,21 @@ class   UserController extends AbstractController
     public function supprimer(int $id, EntityManagerInterface $entityManager, Request $request)
     {
         $userCurrent = $entityManager->getRepository(User::class)->find($id);
-        if($userCurrent->getAdministrateur()){
+        if ($userCurrent->getAdministrateur()) {
             $this->addFlash('error', 'Vous ne pouvez pas supprimer un administrateur');
             return $this->redirectToRoute('user_supprimer_utilisateurs');
         }
-
         $user = $entityManager->getRepository(User::class)->find($id);
 
         $entityManager->remove($user);
         $entityManager->flush();
 
         $this->addFlash("success", "L'utilisateur ". $id." a bien été effacé !");
-        if($request->get('backToDashboard') == 1){
+        if ($request->get('backToDashboard') == 1) {
             return $this->redirectToRoute('user_supprimer_utilisateurs');
 
         }
-
         return $this->redirectToRoute('main_index');
-
     }
 
     /**

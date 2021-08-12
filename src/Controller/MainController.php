@@ -17,7 +17,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 
 /**
- * @Route("/home", name="main_")
+ * @Route({"/home", "/"}, name="main_")
  */
 class MainController extends AbstractController
 {
@@ -32,6 +32,9 @@ class MainController extends AbstractController
         SerializerInterface $serializer
         ): Response
     {
+        if($this->getUser() === null) {
+            return $this->redirectToRoute('app_login');
+        }
         $userId = $this->getUser()->getId();
         $filtres = new FiltresData();
         $filtres->page = $request->get('page', 1);
@@ -56,10 +59,10 @@ class MainController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/sorties", name="sortiesAPI")
+    /*
+     @Route("/sorties", name="sortiesAPI")
      */
-    public function getSorties(
+    /*public function getSorties(
         SortieRepository $sortieRepository,
         SerializerInterface $serializer
     ) {
@@ -73,5 +76,5 @@ class MainController extends AbstractController
         $response->headers->set('Content-Type', 'application/json');
 
         return $response;
-    }
+    }*/
 }

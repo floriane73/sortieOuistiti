@@ -27,6 +27,13 @@ class SortieController extends AbstractController
         # 3 - encours ( début <= today < début+durée )
         # 4 - passee ( début+durée <= today )
         # 5 - annulee
+    /**
+     * @Route("/", name="blank")
+     */
+    public function index(): Response
+    {
+        return $this->redirectToRoute('sortie_ajout');
+    }
 
     /**
      * @Route ("/details/{id}", name="details")

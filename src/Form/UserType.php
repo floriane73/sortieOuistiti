@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Unique;
 
 class UserType extends AbstractType
 {
@@ -20,7 +21,8 @@ class UserType extends AbstractType
     {
         $builder
             ->add('pseudo', TextType::class, [
-                "label" => "Pseudo :"])
+                "label" => "Pseudo :",
+            ])
             ->add('prenom', TextType::class, [
                 "label" => "Prénom :"
             ])

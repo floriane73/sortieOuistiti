@@ -1,9 +1,9 @@
 {% set page = app.request.get('_route') %}
 <nav>
     <ul class="col-12 col-s-12">
+        {% if app.user %}
         <li class="col-1 col-s-12 title"> <a href="{{ path('main_index') }}"><img class="logo-nav" src="{{ asset('img/logowhite200x205.png') }}"
                                         alt="logo_website"></a></li>
-        {% if app.user %}
             <li class="col-2 col-s-12 title"><a href="{{ path('main_index') }}"
                                           title="Home"><div>Ouistiti Sorties</div></a>
             </li>
@@ -29,6 +29,10 @@
             <li class="col-2 col-s-12 nav-choices"><a href="{{ path('app_logout') }}"
                                           title="Logout" {% if page == "app_login" %} class="active" {% endif %}>Déconnexion
                     ({{ app.user.pseudo }})</a></li>
+            {% else %}
+                <li class="col-1 col-s-12 title"> <img class="logo-nav" src="{{ asset('img/logowhite200x205.png') }}"
+                                                                                          alt="logo_website"></li>
+                <li class="col-2 col-s-12 title"><div>Ouistiti Sorties</div></li>
         {% endif %}
     </ul>
 </nav>
