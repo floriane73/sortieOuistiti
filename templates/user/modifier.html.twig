@@ -3,13 +3,6 @@
 {% block body %}
 
     <h1>Mon profil</h1>
-    {% for label, messages in app.flashes %}
-        {% for message in messages %}
-            <div class="flash-{{ label }}">
-                {{ message }}
-            </div>
-        {% endfor %}
-    {% endfor %}
     {% if app.user.avatarPath %}
         <img src='{{ asset('uploads/avatar/'~ app.user.avatarPath) }}' alt='avatar' width="200">
     {% endif %}
