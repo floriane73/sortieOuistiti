@@ -47,11 +47,8 @@ security:
         - { path: ^/registerListe, roles: ROLE_ADMIN }
         - { path: ^/user/supprimerUtilisateurs, roles: ROLE_ADMIN }
 
-        - { path: ^/sortie/details/*, roles: ROLE_USER }
-        - { path: ^/sortie/ajout, roles: ROLE_USER }
-        - { path: ^/user/modifier, roles: ROLE_USER }
+        - { path: ^/sortie*, roles: ROLE_USER }
         - { path: ^/logout, roles: ROLE_USER }
-
-        - { path: ^/user*, roles: ROLE_DESACTIVE }
+        - { path: ^/user*, roles: ROLE_USER }
 
         - { path: ^/login, roles: IS_AUTHENTICATED_ANONYMOUSLY }

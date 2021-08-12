@@ -7,20 +7,20 @@
         <img src='{{ asset('uploads/avatar/'~ app.user.avatarPath) }}' alt='avatar' width="200">
     {% endif %}
     {{ form_start(userForm) }}
-        {{ form_row(userForm.pseudo, { value: app.user.pseudo}) }}
+    {{ form_row(userForm.pseudo, { value: app.user.pseudo}) }}
 
-        {{ form_row(userForm.prenom, { value: app.user.prenom}) }}
+    {{ form_row(userForm.prenom, { value: app.user.prenom}) }}
 
-        {{ form_row(userForm.nom, { value: app.user.nom}) }}
+    {{ form_row(userForm.nom, { value: app.user.nom}) }}
 
-        {{ form_row(userForm.telephone, { value: app.user.telephone}) }}
+    {{ form_row(userForm.telephone, { value: app.user.telephone}) }}
 
-        {{ form_row(userForm.email, { value: app.user.email}) }}
+    {{ form_row(userForm.email, { value: app.user.email}) }}
 
-        {{ form_row(userForm.campus)}}
+    {{ form_row(userForm.campus) }}
 
 
-        {{ form_row(userForm.avatarPath, { value: app.user.avatarPath}) }}
+    {{ form_row(userForm.avatarPath, { value: app.user.avatarPath}) }}
     <div id="avatarPreview">
     </div>
     <button type="submit">Enregistrer</button>
@@ -28,22 +28,18 @@
     <button><a href="{{ path('user_modifier_password') }}">Changer le mot de passe</a></button>
     {{ form_end(userForm) }}
 
-    </div>
-
-
-
     <script>
-        window.onload =(function(){
+        window.onload = (function () {
 
             let elementAvatarPreview = document.getElementById("avatarPreview");
             let input = document.getElementById("user_avatarPath");
-            input.addEventListener('change', function(){
+            input.addEventListener('change', function () {
                 let [file] = input.files;
-                if(file){
+                if (file) {
                     //verification si bien une image
-                    if(file['type'].split('/')[0] == "image"){
-                        elementAvatarPreview.innerHTML = "<img src='"+ URL.createObjectURL(file) +"' alt='avatar' width='200' height=''>";
-                     }
+                    if (file['type'].split('/')[0] == "image") {
+                        elementAvatarPreview.innerHTML = "<img src='" + URL.createObjectURL(file) + "' alt='avatar' width='200' height=''>";
+                    }
                 }
             })
         })();
