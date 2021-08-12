@@ -16,5 +16,7 @@
     {{ form_row(sortieForm.lieu) }}
     <div>Campus : {{ sortie.campus.nom }}</div>
     <button>Valider</button>
+    <button><a href="{{ path('sortie_details_annuler', {"id": sortie.id}) }}" class="ajoutSortie">Annuler la sortie</a></button>
+
     {{ form_end(sortieForm) }}
 {% endblock %}

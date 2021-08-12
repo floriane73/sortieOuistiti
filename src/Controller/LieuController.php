@@ -6,6 +6,7 @@ use App\Entity\Lieu;
 use App\Form\LieuType;
 use App\Repository\LieuRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,9 +18,11 @@ class LieuController extends AbstractController
     /**
      * @Route("/lieu", name="lieu")
      */
-    public function liste(LieuRepository $lieuRepository, EntityManagerInterface $entityManager, Request $request): Response
+    public function liste(PaginatorInterface $paginator, LieuRepository $lieuRepository, EntityManagerInterface $entityManager, Request $request): Response
     {
         $lieux =$lieuRepository->findAll();
+
+        $listeLieux = $paginator->paginate($lieux, $request->get("page", 1), 10);
 
         $lieu = new Lieu();
         $lieuForm = $this->createForm(LieuType::class, $lieu);
@@ -34,7 +37,7 @@ class LieuController extends AbstractController
         }
 
         return $this->render('lieu/liste.html.twig', [
-            'listeLieux' => $lieux,
+            'listeLieux' => $listeLieux,
             'lieuForm' => $lieuForm->createView()
         ]);
     }

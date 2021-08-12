@@ -3,20 +3,16 @@
 <nav>
     <ul class="col-12 col-s-12">
         {% if app.user %}
-
             <li class="col-1 col-s-12"><a href="{{ path('main_index') }}" title="Home">Accueil</a></li>
             <li class="col-1 col-s-12"><a href="{{ path('user_modifier_profil') }}" title="Afficher mon profil" {% if page == "user_modifier_profil" %} class = "active" {% endif %}>Mon profil</a></li>
-            <li class="col-1 col-s-12"><a href="{{ path('lieu') }}" title="Liste de lieu" {% if page == "lieu" %} class = "active" {% endif %}>Liste de lieu</a></li>
             <li class="col-2 col-s-12"><a href="{{ path('app_logout') }}" title="Logout" {% if page == "app_login" %} class = "active" {% endif %}>Se déconnecter ({{ app.user.pseudo }})</a></li>
             {% if is_granted("ROLE_ADMIN") %}
                 <li class="col-2 col-s-12"><a href="{{ path('app_register') }}" title="Créer un nouveau compte" {% if page == "app_register" %} class = "active" {% endif %}>Enregistrer un étudiant</a></li>
-                <li class="col-3 col-s-12"><a href="{{ path('app_registerListe') }}" title="Enregistrer une liste d'étudiants" {% if page == "app_registerListe" %} class = "active" {% endif %}>Enregistrer une liste d'étudiants</a></li>
-                <li class="col-2 col-s-12"><a href="{{ path('user_supprimer_utilisateurs') }}" title="Supprimer des utilisateurs" {% if page == "user_supprimer_utilisateurs" %} class = "active" {% endif %}>Supprimer des utilisateurs</a></li>
-                {#  <li class="col-1 col-s-12"><a href="{{ path('lieu') }}" title="Gestion villes">Villes</a></li>
-                <li class="col-1 col-s-12"><a href="{{ path('lieu') }}" title="Gestion campus">Campus</a></li>#}
+                <li class="col-2 col-s-12"><a href="{{ path('app_registerListe') }}" title="Enregistrer une liste d'étudiants" {% if page == "app_registerListe" %} class = "active" {% endif %}>Enregistrer une liste d'étudiants</a></li>
+                <li class="col-2 col-s-12"><a href="{{ path('user_supprimer_utilisateurs') }}" title="Supprimer des utilisateurs" {% if page == "user_supprimer_utilisateurs" %} class = "active" {% endif %}>Supprimer des étudiants</a></li>
+                <li class="col-1 col-s-12"><a href="{{ path('lieu') }}" title="Liste des lieux" {% if page == "lieu" %} class = "active" {% endif %}>Liste de lieux</a></li>
+                <li class="col-1 col-s-12"><a href="{{ path('ville') }}" title="Liste des villes" {% if page == "ville" %} class = "active" {% endif %}>Liste des villes</a></li>
             {% endif %}
-        {% else %}
-            <li class="col-2 col-s-12"><a href="{{ path('app_login') }}" title="Login" {% if page == "app_login" %} class = "active" {% endif %}>Login</a></li>
         {% endif %}
     </ul>
 </nav>

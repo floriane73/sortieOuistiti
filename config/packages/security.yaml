@@ -49,9 +49,11 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/lieu, roles: ROLE_ADMIN }
+        - { path: ^/ville, roles: ROLE_ADMIN }
         - { path: ^/register, roles: ROLE_ADMIN }
         - { path: ^/registerListe, roles: ROLE_ADMIN }
         - { path: ^/user/supprimerUtilisateurs, roles: ROLE_ADMIN }
 
         - { path: ^/sortie/details/*, roles: ROLE_USER }
+        - { path: ^/sortie/ajout, roles: ROLE_USER }
         - { path: ^/user/modifier, roles: ROLE_USER }
